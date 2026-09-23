@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { mockAuthService } from './mockAuthService'
-import type { CredenciaisLogin, DadosCadastro, Usuario } from './types'
+import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
+import { criarEvento, criarRepositorioLocal } from '@/services/audit/auditRepository'
+import { CHAVES } from '@/services/storage/localStore'
 
 interface AuthContextValue {
   usuario: Usuario | null
+  sessao: Sessao | null
   carregando: boolean
   entrar(credenciais: CredenciaisLogin): Promise<void>
   cadastrar(dados: DadosCadastro): Promise<void>
@@ -16,35 +19,68 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 // existir um backend real, sem tocar em nenhuma tela.
 const authService = mockAuthService
 
+function registrarSessao(usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
+  criarRepositorioLocal(usuario.id).registrar(
+    criarEvento(
+      { id: usuario.id, nome: usuario.nome },
+      {
+        scenario: null,
+        category: 'sessao',
+        entity: 'sessao',
+        field: null,
+        previousValue: null,
+        newValue: null,
+        action,
+        summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
+      },
+    ),
+  )
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [sessao, setSessao] = useState<Sessao | null>(null)
   const [carregando, setCarregando] = useState(true)
 
   useEffect(() => {
-    authService.sessaoAtual().then((sessao) => {
-      setUsuario(sessao?.usuario ?? null)
+    authService.sessaoAtual().then((s) => {
+      setSessao(s)
       setCarregando(false)
     })
   }, [])
 
+  // Logout (ou login) feito em outra aba reflete aqui também.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === CHAVES.sessao || e.key === null) {
+        authService.sessaoAtual().then(setSessao)
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
-      usuario,
+      usuario: sessao?.usuario ?? null,
+      sessao,
       carregando,
       async entrar(credenciais) {
-        const sessao = await authService.login(credenciais)
-        setUsuario(sessao.usuario)
+        const nova = await authService.login(credenciais)
+        registrarSessao(nova.usuario, 'LOGIN')
+        setSessao(nova)
       },
       async cadastrar(dados) {
-        const sessao = await authService.registrar(dados)
-        setUsuario(sessao.usuario)
+        const nova = await authService.registrar(dados)
+        registrarSessao(nova.usuario, 'LOGIN')
+        setSessao(nova)
       },
       async sair() {
+        if (sessao) registrarSessao(sessao.usuario, 'LOGOUT')
         await authService.logout()
-        setUsuario(null)
+        setSessao(null)
       },
     }),
-    [usuario, carregando],
+    [sessao, carregando],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
