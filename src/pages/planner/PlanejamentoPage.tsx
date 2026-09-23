@@ -97,7 +97,7 @@ export function PlanejamentoPage() {
         <SurfaceHeader
           id="titulo-premissas"
           title="Premissas e origem dos dados"
-          subtitle="Deixa claro de onde vêm os números — e quem os alterou por último."
+          subtitle="Deixa claro de onde vêm os números e quem os alterou por último."
         />
         <div className="px-5 pb-5">
           <ProvenancePanel

@@ -31,7 +31,7 @@ export function AuditoriaPage() {
         <Icon nome="escudo" className="mt-0.5 h-4 w-4 shrink-0 text-fg-3" />
         <p>
           <span className="font-medium text-fg">Registro local, não inviolável.</span> Os eventos ficam no armazenamento
-          deste navegador e podem ser apagados por quem tem acesso a ele. Servem para rastrear o trabalho — o que mudou,
+          deste navegador e podem ser apagados por quem tem acesso a ele. Servem para rastrear o trabalho: o que mudou,
           quando e de quanto para quanto. Uma trilha de auditoria confiável exige gravação em servidor.
         </p>
       </div>
@@ -75,7 +75,7 @@ export function AuditoriaPage() {
         aberto={confirmarLimpeza}
         onFechar={() => setConfirmarLimpeza(false)}
         titulo="Apagar o histórico local?"
-        descricao="Todos os eventos deste navegador serão removidos. Fica registrado um único evento informando a limpeza — por isso o histórico nunca parece contínuo quando não é."
+        descricao="Todos os eventos deste navegador serão removidos. Fica registrado um único evento informando a limpeza. Por isso o histórico nunca parece contínuo quando não é."
         rodape={
           <>
             <Button size="sm" variant="ghost" onClick={() => setConfirmarLimpeza(false)}>

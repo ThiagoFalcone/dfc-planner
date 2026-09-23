@@ -4,7 +4,7 @@ import { formatarNumero } from '@/lib/formato'
 
 /**
  * Valor calculado (fluxo/acumulado). Quando muda por causa de uma edição,
- * pisca um realce curto — o recálculo fica visível sem loader.
+ * pisca um realce curto para o recálculo ficar visível sem loader.
  */
 export function DerivedValue({ valor, destaque }: { valor: number | undefined; destaque?: boolean }) {
   const anterior = useRef(valor)

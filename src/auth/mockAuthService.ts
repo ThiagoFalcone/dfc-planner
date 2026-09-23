@@ -2,7 +2,7 @@ import type { AuthService, CredenciaisLogin, DadosCadastro, Sessao, Usuario } fr
 import { CHAVES, ehObjeto, gravarJSON, lerJSON, remover } from '@/services/storage/localStore'
 
 /**
- * AUTENTICAÇÃO SIMULADA / DEMONSTRATIVA — não oferece segurança real.
+ * AUTENTICAÇÃO SIMULADA / DEMONSTRATIVA: não oferece segurança real.
  *
  * Nenhuma chamada de rede: usuários (inclusive a senha, em texto puro) e a
  * sessão ficam no armazenamento do navegador. Qualquer pessoa com acesso ao

@@ -41,7 +41,7 @@ export interface WorkspaceContext {
   projetos: ControleProjetos
   exportar(formato: FormatoExportacao): void
   avisar(texto: string, acao?: Aviso['acao']): void
-  /** Aviso com botão "Desfazer" — para ações destrutivas. */
+  /** Aviso com botão "Desfazer", usado em ações destrutivas. */
   avisarDesfeito(texto: string): void
   abrirNovoCenario(): void
   abrirNovoProjeto(): void

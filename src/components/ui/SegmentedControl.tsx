@@ -11,7 +11,7 @@ export interface Segmento<T extends string> {
 
 /**
  * Grupo de opções mutuamente exclusivas (radiogroup), com setas para
- * alternar — padrão de teclado de um controle segmentado nativo.
+ * alternar, no padrão de teclado de um controle segmentado nativo.
  */
 export function SegmentedControl<T extends string>({
   valor,

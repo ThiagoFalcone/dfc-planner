@@ -4,3 +4,12 @@ dist-ssr
 *.local
 .DS_Store
 coverage
+
+# variáveis de ambiente (nenhuma é necessária hoje, mas nunca commitadas se existirem)
+.env
+.env.*
+
+# editores
+.vscode/*
+!.vscode/extensions.json
+.idea

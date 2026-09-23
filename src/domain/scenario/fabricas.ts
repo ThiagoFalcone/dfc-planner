@@ -7,7 +7,7 @@ import { gerarId } from './types'
 
 /**
  * Fábricas de planejamentos e cenários. Todo dado inicial do sistema nasce
- * aqui — e só de duas fontes: o caso de referência do enunciado (EduTask) ou
+ * aqui, e só de duas fontes: o caso de referência do enunciado (EduTask) ou
  * valores em branco. Nada de números inventados.
  */
 
@@ -34,7 +34,7 @@ export function novoCenario(
   }
 }
 
-/** Periodos com ajustes da simulação aplicados — o mesmo mecanismo do simulador de sensibilidade. */
+/** Periodos com ajustes da simulação aplicados, no mesmo mecanismo do simulador de sensibilidade. */
 export function periodosAjustados(periodos: PeriodoInput[], ajustes: Ajustes): PeriodoInput[] {
   // Valores inválidos (NaN) passariam adiante como "NaN"; mantemos o texto original nesses campos.
   const numericos = paraPeriodosNumericos(periodos)
@@ -99,7 +99,7 @@ export function criarProjeto(
       cenarioExemploEdutask.periodos.map(periodoParaInput),
       cenarioExemploEdutask.descricaoPremissas,
       'material-disciplina',
-      'Enunciado EduTask — opção 3',
+      'Enunciado EduTask, opção 3',
       meta,
     )
   } else if (opcoes.partida === 'importado' && opcoes.importado) {

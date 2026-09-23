@@ -34,7 +34,7 @@ export interface CenarioEditavel {
   cor: number
   /**
    * Taxa mínima de atratividade, em % ao mês, como texto da UI ('' = não informada).
-   * Usada só pela análise descontada complementar — não altera os indicadores da Opção 3.
+   * Usada só pela análise descontada complementar; não altera os indicadores da Opção 3.
    */
   tma: string
   periodos: PeriodoInput[]
@@ -51,7 +51,7 @@ export interface EstadoPlanner {
   cenarioAtivoId: string
 }
 
-/** Linha do índice de planejamentos — o suficiente para listar sem abrir cada um. */
+/** Linha do índice de planejamentos: o suficiente para listar sem abrir cada um. */
 export interface ResumoProjeto {
   id: string
   nome: string

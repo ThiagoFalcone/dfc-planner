@@ -4,7 +4,7 @@ import type { IndicadoresFluxoCaixa, Periodo } from '@/types'
 /**
  * Simulação "e se": aplica ajustes percentuais por tipo de entrada (e um
  * atraso nas receitas) sobre uma cópia dos períodos. Nada aqui altera o
- * cenário salvo — o resultado só vira cenário se a pessoa pedir.
+ * cenário salvo. O resultado só vira cenário se a pessoa pedir.
  */
 export interface Ajustes {
   /** Variações em % (ex.: -20 = 20% menor). */

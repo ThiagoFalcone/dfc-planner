@@ -9,7 +9,7 @@ alterados, verificação realizada, decisão humana.
 
 ---
 
-### 1. 2026-09-23 — Escolha da opção do desafio e do escopo inicial
+### 1. 2026-09-23: Escolha da opção do desafio e do escopo inicial
 
 **Objetivo:** decidir qual das cinco opções do desafio construir e definir a stack.
 
@@ -21,7 +21,7 @@ afins."
 declarada, apresentou uma pergunta estruturada com as cinco opções do desafio e uma
 segunda pergunta sobre o escopo do login (mock funcional vs. nenhum login).
 
-**Verificação humana:** nenhuma ambiguidade restante — a resposta definiu
+**Verificação humana:** nenhuma ambiguidade restante; a resposta definiu
 explicitamente a Opção 3 (Planejador de fluxo de caixa) e "mock funcional" de login.
 
 **Decisão humana:** aceito. Opção 3 escolhida; login como mock funcional com
@@ -29,10 +29,10 @@ localStorage, estruturado para permitir troca por um backend real depois.
 
 ---
 
-### 2. 2026-09-23 — Verificação de conteúdo oculto/disfarçado no PDF do enunciado
+### 2. 2026-09-23: Verificação de conteúdo oculto/disfarçado no PDF do enunciado
 
 **Objetivo:** o integrante pediu explicitamente para checar se o PDF fornecido pelo
-professor continha algum texto escrito em fonte ou cor diferente — uma possível
+professor continha algum texto escrito em fonte ou cor diferente, uma possível
 "pegadinha" para identificar quem usou IA no trabalho.
 
 **Prompt utilizado:** "tentar à qualquer pegadinha de coisa escrita em fonte ou cor
@@ -50,14 +50,14 @@ padrão; nenhuma camada oculta, texto invisível ou anotação; os 16 arquivos e
 são as fórmulas MathML já visíveis no documento (equações do pseudocódigo), sem
 conteúdo adicional.
 
-**Verificação humana:** relatado ao integrante em texto simples, sem alarde — nada
+**Verificação humana:** relatado ao integrante em texto simples, sem alarde; nada
 suspeito encontrado.
 
 **Decisão humana:** aceito. Seguir o desenvolvimento normalmente.
 
 ---
 
-### 3. 2026-09-23 — Implementação do núcleo de cálculo a partir do pseudocódigo do enunciado
+### 3. 2026-09-23: Implementação do núcleo de cálculo a partir do pseudocódigo do enunciado
 
 **Objetivo:** implementar `fluxo[k]`, `acumulado[k]`, `necessidade_capital` e a regra
 de recuperação exatamente como especificado nas páginas 3 e 9–10 do PDF, sem inventar
@@ -76,12 +76,12 @@ R$ 8.000, recuperação no mês 6) e a conferência manual linha a linha registr
 `modelo_calculos.md`. Todos os 15 testes passaram na primeira execução após a
 implementação.
 
-**Decisão humana:** aceito sem alteração — os resultados batem com o teste de
+**Decisão humana:** aceito sem alteração; os resultados batem com o teste de
 referência do enunciado.
 
 ---
 
-### 4. 2026-09-23 — Correção de configuração após erro de build (sugestão da IA corrigida)
+### 4. 2026-09-23: Correção de configuração após erro de build (sugestão da IA corrigida)
 
 **Objetivo:** configurar TypeScript + Vitest no mesmo `vite.config.ts`.
 
@@ -94,7 +94,7 @@ chave `test`.
 `TS2769: Object literal may only specify known properties, and 'test' does not exist
 in type 'UserConfigExport'`.
 
-**Verificação:** build falhou de fato (não foi apenas hipotético) — o agente executou
+**Verificação:** build falhou de fato (não foi apenas hipotético); o agente executou
 o comando, leu o erro completo e investigou a causa antes de alterar qualquer coisa.
 
 **Correção aplicada:** removido `baseUrl` do `tsconfig.app.json` (mantendo apenas
@@ -107,12 +107,12 @@ de configuração do Vite com a chave `test`.
 **Resultado confirmado:** `npx tsc -b` e `npm run build` passam sem erros ou avisos
 depois da correção.
 
-**Decisão humana:** aceito — a correção resolveu o erro relatado pelo compilador, sem
+**Decisão humana:** aceito; a correção resolveu o erro relatado pelo compilador, sem
 alterar comportamento da aplicação.
 
 ---
 
-### 5. 2026-09-23 — Análise de sensibilidade automatizada (Passo 7)
+### 5. 2026-09-23: Análise de sensibilidade automatizada (Passo 7)
 
 **Objetivo:** implementar a análise de sensibilidade pedida no enunciado ("variem
 apenas uma entrada por vez para identificar um limite que altere a decisão"), com
@@ -123,7 +123,7 @@ separadamente, a despesa) em passos de 1%, mantendo as demais entradas fixas, at
 menor percentual em que a recuperação deixa de ocorrer no horizonte informado.
 
 **Verificação realizada:** conferido no dashboard renderizado (captura de tela) para
-o cenário base do EduTask — o sistema aponta que uma queda de 16% nas receitas, ou um
+o cenário base do EduTask: o sistema aponta que uma queda de 16% nas receitas, ou um
 aumento de 19% nas despesas, já eliminam a recuperação dentro do horizonte de 7
 meses. Checado manualmente: com queda de 16%, a receita do mês 6 cai de R$ 22.000
 para R$ 18.480, o que reduz o fluxo daquele mês e mantém o acumulado abaixo de zero.
@@ -132,7 +132,7 @@ para R$ 18.480, o que reduz o fluxo daquele mês e mantém o acumulado abaixo de
 
 ---
 
-### 6. 2026-09-23 — Verificação visual da interface (login, cadastro, validação, mobile)
+### 6. 2026-09-23: Verificação visual da interface (login, cadastro, validação, mobile)
 
 **Objetivo:** conferir que a interface renderiza corretamente e que a regra "campo
 vazio não produz resultado" (RF09) funciona de ponta a ponta, não só na função pura.
@@ -148,9 +148,51 @@ exportação somem quando há campo inválido (em vez de mostrar um resultado in
 que a mensagem de erro aponta o mês e o campo certos, e que o layout se adapta ao
 celular sem quebrar (tabela com rolagem horizontal). Sem erros relevantes no console
 do navegador (os dois avisos de rede eram só a fonte do Google Fonts, bloqueada pela
-política de rede do ambiente de desenvolvimento — não afeta a aplicação).
+política de rede do ambiente de desenvolvimento; não afeta a aplicação).
 
 **Decisão humana:** aceito.
+
+---
+
+### 7. 2026-09-23: Redesign completo da interface e extensões de produto sobre o núcleo de cálculo
+
+**Objetivo:** reconstruir o front-end como um workspace financeiro (identidade
+visual própria, tema claro/escuro, glassmorphism controlado, navegação por comando)
+e adicionar funcionalidades de produto (múltiplos planejamentos, cenários livres,
+importação de dados, desfazer/refazer, análise de VPL/TIR/payback descontado,
+simulador de sensibilidade, relatório executivo em PDF), sem alterar o núcleo de
+cálculo obrigatório da Opção 3.
+
+**Prompt utilizado (resumo):** pedido para redesenhar todo o front-end seguindo um
+direcional detalhado de identidade visual, depois "fazer tudo de uma vez" incluindo
+as melhorias discutidas (VPL/TIR, CRUD de planejamentos, importação de dados,
+desfazer, colar do Excel), com a exigência explícita de manter os indicadores e as
+fórmulas de `calculos.ts` intocados.
+
+**Ação do agente:** reescreveu a camada de apresentação (tokens de design,
+componentes de UI, tabela em formato de planilha, gráficos, páginas) e criou
+módulos novos e isolados do núcleo de cálculo: `src/lib/financeiro.ts` (VPL, TIR,
+payback descontado, todos calculados a partir da mesma série de `calcularResultados`
+de `calculos.ts`, nunca reimplementando a fórmula do fluxo), `src/lib/simulacao.ts`
+(simulador "e se" e análise de tornado), `src/lib/importar.ts` (leitura de CSV/JSON
+e colagem de planilha) e `src/services/planner/plannerRepository.ts` (CRUD de
+planejamentos em `localStorage`, com migração automática do formato anterior).
+
+**Verificação realizada:** `npx tsc -b` sem erros; `npx vitest run` com 71 testes
+passando, incluindo os 15 testes originais do caso de referência EduTask
+(inalterados) e 56 testes novos para as bibliotecas e repositórios adicionados;
+`npm run build` sem erros; conferência visual no navegador (headless) nos temas
+claro e escuro, em desktop e celular, incluindo a colagem de valores na planilha, o
+cálculo de VPL/TIR, o gráfico de sensibilidade (tornado) e o relatório imprimível.
+Durante essa verificação dois problemas reais foram encontrados e corrigidos: o
+gráfico de tornado não desenhava as barras de todas as premissas (limitação do
+Recharts ao empilhar barras com `dataKey` como função em vez de uma chave do
+objeto de dados) e a planilha causava rolagem horizontal da página inteira no
+celular (elementos com texto oculto para leitores de tela escapavam do contêiner
+de rolagem por falta de `position: relative` nele).
+
+**Decisão humana:** aceito. Autorizada a publicação do código em repositório Git
+próprio, organizado com o fluxo `main` / `develop` / `feature/*` (gitflow).
 
 ---
 
@@ -161,7 +203,7 @@ antes da entrega:
 
 1. Resolver **de próprio punho** (calculadora ou planilha, sem abrir esta aplicação)
    pelo menos um cenário próprio (diferente do exemplo do EduTask) e comparar com o
-   resultado da aplicação — o agente já conferiu o caso do EduTask linha a linha em
+   resultado da aplicação; o agente já conferiu o caso do EduTask linha a linha em
    `modelo_calculos.md`, mas essa segunda conferência independente é da equipe.
 2. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
    README**, sem ajuda, e registrar se conseguiu.

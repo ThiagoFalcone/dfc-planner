@@ -120,7 +120,7 @@ export function Icon({ nome, className, ...props }: { nome: NomeIcone } & SVGPro
 
 /**
  * Marca do DFC Planner: uma curva de acumulado que desce abaixo da linha zero
- * e se recupera — o conceito central do produto.
+ * e se recupera: o conceito central do produto.
  */
 export function BrandMark({ className = 'h-7 w-7' }: { className?: string }) {
   return (

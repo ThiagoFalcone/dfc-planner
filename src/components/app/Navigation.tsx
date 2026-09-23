@@ -65,7 +65,7 @@ export function NavegacaoDesktop({ itens }: { itens: ItemNavegacao[] }) {
   )
 }
 
-/** Barra de abas inferior no celular — navegação própria, não a do desktop comprimida. */
+/** Barra de abas inferior no celular: navegação própria, não a do desktop comprimida. */
 export function NavegacaoMobile({ itens }: { itens: ItemNavegacao[] }) {
   return (
     <nav

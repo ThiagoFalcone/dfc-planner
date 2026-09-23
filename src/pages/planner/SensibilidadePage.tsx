@@ -73,10 +73,10 @@ export function SensibilidadePage() {
         como cenário, use “Recriar” em Cenários ou “Novo cenário”.
       </Alert>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
         <Surface className="p-5 sm:p-6 lg:col-span-4" aria-labelledby="titulo-simulador">
           <h2 id="titulo-simulador" className="text-[15px] font-semibold tracking-[-0.01em] text-fg">
-            Simulador “e se” — {nome}
+            Simulador “e se” de {nome}
           </h2>
           <p className="mt-1 text-[13px] text-fg-3">Varia uma ou mais premissas de uma vez, a partir dos valores atuais.</p>
 
@@ -144,7 +144,7 @@ export function SensibilidadePage() {
         <SurfaceHeader
           id="titulo-tornado"
           title="Qual premissa mais pesa na decisão"
-          subtitle="Cada barra varia uma única premissa em ±20%, mantendo as demais como estão — a leitura clássica de sensibilidade."
+          subtitle="Cada barra varia uma única premissa em ±20%, mantendo as demais como estão: a leitura clássica de sensibilidade."
           action={
             <SegmentedControl
               rotulo="Métrica"

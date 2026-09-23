@@ -13,7 +13,7 @@
  *
  * Convenção de sinal: receitas e residual entram positivos; despesas,
  * investimentos e tributos são informados como valores não-negativos e o
- * sinal negativo é aplicado aqui — a UI nunca pede que o usuário digite
+ * sinal negativo é aplicado aqui; a UI nunca pede que o usuário digite
  * "-8000".
  */
 import type {
@@ -25,7 +25,7 @@ import type {
 
 const TOLERANCIA = 0.01
 
-/** Arredonda apenas para apresentação — os cálculos internos usam o valor cheio. */
+/** Arredonda apenas para apresentação; os cálculos internos usam o valor cheio. */
 export function arredondar(valor: number): number {
   return Math.round((valor + Number.EPSILON) * 100) / 100
 }
@@ -136,9 +136,9 @@ export function calcularIndicadores(resultados: ResultadoPeriodo[]): Indicadores
 /**
  * Valida os períodos segundo as convenções obrigatórias da atividade:
  * - receita, despesa, investimento, tributo e residual não podem ser negativos
- *   (o sinal já é aplicado pela fórmula — pedir um valor negativo duplicaria o sinal);
+ *   (o sinal já é aplicado pela fórmula, pedir um valor negativo duplicaria o sinal);
  * - NaN (campo vazio ou não numérico) é sinalizado, nunca calculado como se fosse zero
- *   silenciosamente — a tela decide como exibir isso ao usuário.
+ *   silenciosamente; a tela decide como exibir isso ao usuário.
  */
 export function validarPeriodos(periodos: Periodo[]): CampoInvalido[] {
   const problemas: CampoInvalido[] = []
@@ -157,7 +157,7 @@ export function validarPeriodos(periodos: Periodo[]): CampoInvalido[] {
         problemas.push({
           mes: p.mes,
           campo,
-          motivo: 'Não deve ser negativo — o sinal já é aplicado no cálculo.',
+          motivo: 'Não deve ser negativo. O sinal já é aplicado no cálculo.',
         })
       }
     }

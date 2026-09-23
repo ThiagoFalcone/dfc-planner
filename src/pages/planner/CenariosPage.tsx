@@ -100,7 +100,7 @@ function listar(nomes: string[]): string {
   return nomes.length <= 1 ? (nomes[0] ?? '') : `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`
 }
 
-/** RF07: leitura objetiva — qual tem menor necessidade de capital e qual recupera antes, sem prever o futuro. */
+/** RF07: leitura objetiva, mostrando qual tem menor necessidade de capital e qual recupera antes, sem prever o futuro. */
 function LeituraComparacao({ validos }: { validos: CenarioComputado[] }) {
   if (validos.length < 2) return null
   const menorCapital = Math.min(...validos.map((c) => c.indicadores!.necessidadeCapital))
@@ -123,7 +123,7 @@ function LeituraComparacao({ validos }: { validos: CenarioComputado[] }) {
         {naoRecuperam.length > 0 && primeiraRecuperacao !== null && `${listar(naoRecuperam.map(nome))} não ${naoRecuperam.length === 1 ? 'recupera' : 'recuperam'} no horizonte. `}
       </p>
       <p className="mt-1">
-        Essa leitura vale apenas para as premissas de cada cenário — mudar receitas, despesas ou o horizonte pode
+        Essa leitura vale apenas para as premissas de cada cenário. Mudar receitas, despesas ou o horizonte pode
         alterar qual deles é mais favorável.
       </p>
     </Alert>
@@ -445,7 +445,7 @@ export function CenariosPage() {
         <SurfaceHeader
           id="titulo-gerenciar"
           title="Gerenciar cenários"
-          subtitle={`Até ${LIMITE_CENARIOS} cenários por planejamento. "Recriar" copia ${nomeReferencia} variando só as receitas — sensibilidade de uma premissa.`}
+          subtitle={`Até ${LIMITE_CENARIOS} cenários por planejamento. "Recriar" copia ${nomeReferencia} variando só as receitas (sensibilidade de uma premissa).`}
           action={
             <Button size="sm" variant="primary" onClick={abrirNovoCenario} disabled={cenarios.length >= LIMITE_CENARIOS}>
               <Icon nome="mais" className="h-4 w-4" />

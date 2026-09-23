@@ -79,7 +79,7 @@ export function RegisterPage() {
         />
         <TextField
           label="Empresa / projeto (opcional)"
-          placeholder="Ex.: Grupo 3 — Engenharia Econômica"
+          placeholder="Ex.: Grupo 3, Engenharia Econômica"
           value={empresa}
           onChange={(e) => setEmpresa(e.target.value)}
         />
