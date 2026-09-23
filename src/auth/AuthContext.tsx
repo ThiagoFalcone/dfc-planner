@@ -15,7 +15,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-// Ponto único de injeção do serviço de autenticação — troque aqui quando
+// Ponto único de injeção do serviço de autenticação: troque aqui quando
 // existir um backend real, sem tocar em nenhuma tela.
 const authService = mockAuthService
 

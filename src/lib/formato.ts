@@ -21,7 +21,7 @@ export function formatarMoeda(valor: number): string {
   return formatadorMoeda.format(valor)
 }
 
-/** Sem centavos quando o valor é inteiro — para KPIs e rótulos de gráfico. */
+/** Sem centavos quando o valor é inteiro, para KPIs e rótulos de gráfico. */
 export function formatarMoedaCurta(valor: number): string {
   return Number.isInteger(valor) ? formatadorMoedaInteira.format(valor) : formatadorMoeda.format(valor)
 }
@@ -46,7 +46,7 @@ export function rotuloMes(mes: number): string {
 /**
  * Converte o que a pessoa digitou numa célula para a forma canônica aceita
  * por paraNumero ("6000.5"). Aceita "6.000", "6.000,50", "6000,5", "R$ 6.000".
- * Se o texto não for reconhecido, devolve-o aparado — a validação de
+ * Se o texto não for reconhecido, devolve-o aparado; a validação de
  * calculos.ts sinaliza o campo em vez de corrigi-lo em silêncio.
  */
 export function normalizarEntradaMonetaria(texto: string): string {

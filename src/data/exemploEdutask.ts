@@ -5,7 +5,7 @@ import type { Cenario } from '@/types'
  * "carregar exemplo" na interface e como fixture dos testes automatizados.
  * Valores em reais. Tributos iguais a zero neste teste. O valor residual de
  * R$ 5.000 no mês 6 é mantido como premissa do exemplo fornecido nas aulas
- * (capital de giro inicial de R$ 3.000 + complemento — ver modelo_calculos.md).
+ * (capital de giro inicial de R$ 3.000 + complemento; ver modelo_calculos.md).
  *
  * Resultado esperado: maior déficit R$ 28.000 (mês 3), saldo final R$ 8.000,
  * recuperação no mês 6.

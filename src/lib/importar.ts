@@ -9,7 +9,7 @@ import { normalizarEntradaMonetaria } from './formato'
  * - CSV/TSV (o CSV exportado pelo próprio app, ou uma planilha copiada):
  *   separador ";", "," ou tabulação; cabeçalho opcional; números no formato
  *   brasileiro ("6.000,50") ou internacional ("6000.5"). Colunas fluxo e
- *   acumulado são ignoradas — são sempre recalculadas.
+ *   acumulado são ignoradas: são sempre recalculadas.
  * - JSON exportado pelo app (cenario.periodos) ou uma lista de períodos.
  *
  * Valores inválidos não são corrigidos: entram como estão e a validação do

@@ -29,7 +29,7 @@ export interface DadosCadastro {
 /**
  * Contrato de autenticação. A implementação mock (mockAuthService) guarda
  * tudo no navegador; uma implementação futura para um backend real
- * (ex.: httpAuthService) troca só este arquivo — os componentes de tela e o
+ * (ex.: httpAuthService) troca só este arquivo; os componentes de tela e o
  * AuthContext não precisam mudar.
  */
 export interface AuthService {

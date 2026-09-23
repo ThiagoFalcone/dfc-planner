@@ -9,17 +9,17 @@ export interface Periodo {
   mes: number
   /** Recebimentos previstos no período (R$, valor não-negativo). */
   receitas: number
-  /** Despesas de operação pagas no período (R$, valor não-negativo, já positivo — o sinal é aplicado no cálculo). */
+  /** Despesas de operação pagas no período (R$, valor não-negativo, já positivo; o sinal é aplicado no cálculo). */
   despesas: number
   /** Investimentos (desembolsos de capital) feitos no período (R$, valor não-negativo). */
   investimentos: number
-  /** Tributos pagos no período (R$, valor absoluto já calculado — não é uma alíquota). */
+  /** Tributos pagos no período (R$, valor absoluto já calculado, não é uma alíquota). */
   tributos: number
   /** Valor residual recebido no período (ex.: venda de ativo, capital de giro devolvido). */
   residual: number
 }
 
-/** Estado "bruto" de edição de um período — strings para permitir campo vazio na UI. */
+/** Estado "bruto" de edição de um período: strings para permitir campo vazio na UI. */
 export interface PeriodoInput {
   mes: number
   receitas: string

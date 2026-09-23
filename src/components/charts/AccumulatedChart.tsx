@@ -75,7 +75,7 @@ function Rotulo({
 }
 
 /**
- * Fluxo acumulado — o gráfico central do produto. Mostra linha zero, zona de
+ * Fluxo acumulado: o gráfico central do produto. Mostra linha zero, zona de
  * déficit, maior déficit, mês de recuperação e saldo final, de modo que a
  * situação financeira seja legível sem consultar a tabela.
  */

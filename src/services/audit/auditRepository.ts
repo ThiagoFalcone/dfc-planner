@@ -4,7 +4,7 @@ import { CHAVES, ehObjeto, gravarJSON, lerJSON, remover } from '@/services/stora
 /**
  * Contrato do repositório de eventos de auditoria.
  *
- * ATENÇÃO — a implementação local abaixo NÃO é uma trilha de auditoria
+ * ATENÇÃO: a implementação local abaixo NÃO é uma trilha de auditoria
  * inviolável: os eventos ficam no localStorage deste navegador e podem ser
  * apagados ou editados por qualquer pessoa com acesso a ele. Serve para
  * rastreabilidade de trabalho (o que mudou, quando, de quanto para quanto).

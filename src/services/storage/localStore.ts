@@ -59,7 +59,7 @@ export function remover(chave: string, tipo: TipoArmazenamento = 'local'): void 
   try {
     storage(tipo)?.removeItem(chave)
   } catch {
-    // storage indisponível (modo privado restrito) — nada a remover
+    // storage indisponível (modo privado restrito): nada a remover
   }
 }
 

@@ -4,7 +4,7 @@ import { ThemeToggle } from '@/components/app/TopBar'
 
 /**
  * Moldura das telas de acesso: centrada, sem ilustração. A única assinatura
- * visual é a curva da marca — um acumulado que afunda e se recupera.
+ * visual é a curva da marca, um acumulado que afunda e se recupera.
  */
 export function AuthLayout({
   title,

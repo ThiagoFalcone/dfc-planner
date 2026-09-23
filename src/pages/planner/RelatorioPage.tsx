@@ -23,7 +23,7 @@ function Secao({ titulo, children }: { titulo: string; children: React.ReactNode
 }
 
 /**
- * Relatório executivo — versão imprimível (Ctrl+P → salvar como PDF).
+ * Relatório executivo: versão imprimível (Ctrl+P → salvar como PDF).
  * Sem barra de navegação: só o conteúdo do documento, em tema claro fixo.
  */
 export function RelatorioPage() {
@@ -91,7 +91,7 @@ export function RelatorioPage() {
               <BrandMark className="h-8 w-8" />
               <div>
                 <p className="text-[15px] font-semibold">DFC Planner</p>
-                <p className="text-xs text-fg-3">Relatório de decisão — planejamento de fluxo de caixa</p>
+                <p className="text-xs text-fg-3">Relatório de decisão do planejamento de fluxo de caixa</p>
               </div>
             </div>
             <p className="text-right text-xs text-fg-3">
@@ -148,7 +148,7 @@ export function RelatorioPage() {
           </Secao>
 
           <p className="print-avoid mt-8 border-t border-line pt-3 text-xs text-fg-3">
-            Nenhuma afirmação acima é uma garantia sobre o futuro — são leituras condicionadas às premissas declaradas
+            Nenhuma afirmação acima é uma garantia sobre o futuro. São leituras condicionadas às premissas declaradas
             neste documento, válidas apenas para o horizonte e os valores informados.
           </p>
         </article>

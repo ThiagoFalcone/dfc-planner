@@ -12,7 +12,7 @@ function CarregandoSessao() {
 
 /**
  * Guarda de rota do front-end. Com a autenticação simulada, isso controla
- * apenas a navegação — não protege dados, que já estão no navegador.
+ * apenas a navegação; não protege dados, que já estão no navegador.
  */
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { usuario, carregando } = useAuth()

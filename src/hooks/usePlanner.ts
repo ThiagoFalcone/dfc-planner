@@ -77,8 +77,8 @@ export type OrigemNovoCenario =
  * histórico de desfazer/refazer.
  *
  * Toda alteração passa por `commit`, que atualiza o estado de forma síncrona
- * (via ref) — assim duas ações seguidas no mesmo evento nunca leem estado
- * velho — e emite o evento de auditoria uma única vez (fora de updaters do
+ * (via ref), assim duas ações seguidas no mesmo evento nunca leem estado
+ * velho, e emite o evento de auditoria uma única vez (fora de updaters do
  * React, que o StrictMode executa duas vezes).
  */
 export function usePlanner({ ator, registrar, inicial, salvar }: OpcoesPlanner) {
@@ -302,7 +302,7 @@ export function usePlanner({ ator, registrar, inicial, salvar }: OpcoesPlanner) 
           ...c,
           periodos: cenarioExemploEdutask.periodos.map(periodoParaInput),
           descricaoPremissas: cenarioExemploEdutask.descricaoPremissas,
-          proveniencia: { ...c.proveniencia, fonte: 'material-disciplina', referencia: 'Enunciado EduTask — opção 3' },
+          proveniencia: { ...c.proveniencia, fonte: 'material-disciplina', referencia: 'Enunciado EduTask, opção 3' },
         })),
         {
           scenario: refCenario(cenario),

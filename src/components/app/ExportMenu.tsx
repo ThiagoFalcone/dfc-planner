@@ -52,7 +52,7 @@ export function ExportMenu({ disponivel, onExportar }: { disponivel: boolean; on
           <MenuItem
             icone={<Icon nome="impressora" className="h-4 w-4" />}
             desabilitado={!disponivel}
-            descricao={motivo ?? 'Indicadores, gráficos, premissas e leitura — imprimir ou salvar em PDF'}
+            descricao={motivo ?? 'Indicadores, gráficos, premissas e leitura, para imprimir ou salvar em PDF'}
             onSelect={() => {
               fechar()
               onExportar('pdf')

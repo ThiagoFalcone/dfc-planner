@@ -43,7 +43,7 @@ function ItemInsight({ insight }: { insight: Insight }) {
   )
 }
 
-/** Leituras determinísticas — cada uma expõe a regra que a gerou. */
+/** Leituras determinísticas. Cada uma expõe a regra que a gerou. */
 export function FinancialInsights({ insights }: { insights: Insight[] }) {
   return (
     <ul className="divide-y divide-line" aria-live="polite">

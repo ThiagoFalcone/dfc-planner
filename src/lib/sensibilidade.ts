@@ -6,7 +6,7 @@ import type { Periodo } from '@/types'
  * reduz as receitas em percentuais crescentes até identificar o menor
  * percentual de queda que faz a recuperação deixar de ocorrer dentro do
  * horizonte informado. Não altera despesas, investimentos, tributos ou
- * residual — isola o efeito de uma única premissa, como pede o enunciado.
+ * residual; isola o efeito de uma única premissa, como pede o enunciado.
  *
  * Retorna null quando nem uma queda de 100% das receitas impede a
  * recuperação (indicando que a decisão é pouco sensível a esta variável, ao

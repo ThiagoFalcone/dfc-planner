@@ -45,10 +45,10 @@ function TickCategoria({ x, y, payload, dados, t }: { x?: number | string; y?: n
 
 /**
  * Tornado: para cada premissa, a barra vai do resultado com −20% ao
- * resultado com +20%, ordenadas pela maior amplitude — a leitura visual de
+ * resultado com +20%, ordenadas pela maior amplitude: a leitura visual de
  * "o que mais mexe na decisão". Uma premissa pode ter amplitude zero para
  * uma métrica (ex.: receita não muda o capital necessário quando o maior
- * déficit ocorre antes de qualquer receita) — isso é lido do cálculo, não
+ * déficit ocorre antes de qualquer receita); isso é lido do cálculo, não
  * ocultado.
  */
 export function TornadoChart({ linhas, metricaRotulo }: { linhas: LinhaTornado[]; metricaRotulo: string }) {

@@ -76,7 +76,7 @@ export function ResultadosPage() {
           <div className="px-2 pb-4 sm:px-4">
             {semMovimento ? (
               <p className="px-3 py-16 text-center text-[13px] text-fg-3">
-                Todos os meses estão zerados — preencha o planejamento para desenhar a curva.
+                Todos os meses estão zerados. Preencha o planejamento para desenhar a curva.
               </p>
             ) : (
               <AccumulatedChart
@@ -89,7 +89,7 @@ export function ResultadosPage() {
         </Surface>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
         <Surface className="lg:col-span-7" aria-labelledby="titulo-fluxo-mensal">
           <SurfaceHeader id="titulo-fluxo-mensal" title="Fluxo líquido mensal" subtitle="Receitas e residual menos despesas, investimento e tributos. Eixo em R$." />
           <div className="px-2 pb-4 sm:px-4">
@@ -100,7 +100,7 @@ export function ResultadosPage() {
           <SurfaceHeader
             id="titulo-insights"
             title="Leitura financeira"
-            subtitle="Regras fixas sobre os indicadores calculados — sem texto gerado por IA."
+            subtitle="Regras fixas sobre os indicadores calculados, sem texto gerado por IA."
           />
           <div className="px-5 pb-5">
             <FinancialInsights insights={insights} />

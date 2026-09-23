@@ -35,7 +35,7 @@ function TooltipFluxo({ active, payload }: TooltipContentProps) {
 
 /**
  * Fluxo líquido mensal (RF06: azul positivo, vermelho negativo). Barras crescem da linha zero: posição (acima/abaixo),
- * hachura nas negativas e ícones ▲▼ no tooltip — a cor nunca é o único sinal.
+ * hachura nas negativas e ícones ▲▼ no tooltip; a cor nunca é o único sinal.
  */
 export function CashFlowChart({ resultados }: { resultados: ResultadoPeriodo[] }) {
   const t = useChartTheme()

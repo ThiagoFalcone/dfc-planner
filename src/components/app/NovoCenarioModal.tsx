@@ -64,7 +64,7 @@ export function NovoCenarioModal({
       titulo="Novo cenário"
       descricao={
         cheio
-          ? `O limite é de ${LIMITE_CENARIOS} cenários por planejamento — exclua um para criar outro.`
+          ? `O limite é de ${LIMITE_CENARIOS} cenários por planejamento. Exclua um para criar outro.`
           : 'O novo cenário vira o cenário ativo e entra na comparação.'
       }
       rodape={

@@ -16,7 +16,7 @@ import type { Periodo } from '@/types'
  * conforme exigido no Passo 3 da atividade. Ver modelo_calculos.md.
  */
 
-describe('calcularFluxo — regra fluxo[k] = receitas - despesas - investimentos - tributos + residual', () => {
+describe('calcularFluxo: regra fluxo[k] = receitas - despesas - investimentos - tributos + residual', () => {
   it('caso normal: soma e subtrai os componentes corretamente', () => {
     const periodo: Periodo = {
       mes: 1,

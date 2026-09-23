@@ -24,7 +24,7 @@ export interface AnaliseDescontada {
   tirAnual: number | null
   paybackDescontado: number | null
   houveDeficitDescontado: boolean
-  /** Mais de uma troca de sinal no fluxo pode gerar mais de uma TIR — a UI avisa. */
+  /** Mais de uma troca de sinal no fluxo pode gerar mais de uma TIR; a UI avisa. */
   mudancasDeSinal: number
   serie: ResultadoPeriodo[]
 }
