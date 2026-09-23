@@ -1,41 +1,40 @@
 import clsx from 'clsx'
 import type { HTMLAttributes, ReactNode } from 'react'
 
-export function Card({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
+/** Superfície de conteúdo (não é vidro): tabela, gráficos, painéis de leitura. */
+export function Surface({ className, children, ...props }: HTMLAttributes<HTMLElement>) {
   return (
-    <div
-      className={clsx('rounded-2xl border border-ink-200 bg-white shadow-sm shadow-ink-900/[0.03]', className)}
+    <section
+      className={clsx('rounded-[18px] border border-line bg-surface shadow-[var(--shadow-surface)]', className)}
       {...props}
     >
       {children}
-    </div>
+    </section>
   )
 }
 
-export function CardHeader({
+export function SurfaceHeader({
   title,
   subtitle,
   action,
+  id,
+  className,
 }: {
   title: ReactNode
   subtitle?: ReactNode
   action?: ReactNode
+  id?: string
+  className?: string
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-ink-100 px-5 py-4">
-      <div>
-        <h3 className="text-sm font-semibold text-ink-900">{title}</h3>
-        {subtitle && <p className="mt-0.5 text-xs text-ink-500">{subtitle}</p>}
+    <header className={clsx('flex flex-wrap items-start justify-between gap-x-4 gap-y-2 px-5 pt-4 pb-3', className)}>
+      <div className="min-w-0">
+        <h2 id={id} className="text-[15px] font-semibold tracking-[-0.01em] text-fg">
+          {title}
+        </h2>
+        {subtitle && <p className="mt-0.5 text-[13px] text-fg-3">{subtitle}</p>}
       </div>
       {action}
-    </div>
-  )
-}
-
-export function CardBody({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={clsx('px-5 py-4', className)} {...props}>
-      {children}
-    </div>
+    </header>
   )
 }

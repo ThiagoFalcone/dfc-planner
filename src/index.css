@@ -1,86 +1,333 @@
 @import 'tailwindcss';
 
-@theme {
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+/*
+ * DFC Planner — design tokens.
+ *
+ * Duas camadas:
+ *  1. Tokens semânticos (:root / [data-theme="dark"]) — a única fonte de cor,
+ *     raio, blur, sombra e movimento. Cada tema é desenhado separadamente,
+ *     não é uma inversão do outro.
+ *  2. Mapeamento para utilitários Tailwind (@theme inline) — componentes usam
+ *     bg-surface, text-fg-2, border-line etc., nunca hex solto.
+ *
+ * Profundidade (do fundo para o topo): canvas → surface → glass (controles) →
+ * popover → modal. Quanto mais alto, maior o blur e a opacidade.
+ */
 
-  --color-brand-50: #f2f4ff;
-  --color-brand-100: #e6e9fe;
-  --color-brand-200: #c9cdfc;
-  --color-brand-300: #a4a9f8;
-  --color-brand-400: #7a7bf2;
-  --color-brand-500: #5b57e8;
-  --color-brand-600: #473fcf;
-  --color-brand-700: #3a32a8;
-  --color-brand-800: #302a85;
-  --color-brand-900: #251f63;
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-  --color-ink-50: #f7f7f9;
-  --color-ink-100: #eeeef2;
-  --color-ink-200: #d8d8e0;
-  --color-ink-300: #b4b4c2;
-  --color-ink-400: #8b8b9e;
-  --color-ink-500: #6c6c81;
-  --color-ink-600: #52525f;
-  --color-ink-700: #3d3d48;
-  --color-ink-800: #24242c;
-  --color-ink-900: #121218;
-  --color-ink-950: #0a0a0e;
-
-  --color-positive: #16a34a;
-  --color-negative: #dc2626;
-  --color-warning: #d97706;
-}
-
-:root {
+/* `.tema-claro` força o tema claro num trecho (relatório impresso), mesmo com o app no escuro. */
+:root,
+.tema-claro {
   color-scheme: light;
+
+  --canvas: #eceff4;
+  --canvas-glow: rgba(36, 86, 224, 0.07);
+  --surface: #ffffff;
+  --surface-muted: #f5f7fa;
+  --surface-elevated: #ffffff;
+  --surface-derived: #f3f5f9;
+  --surface-hover: rgba(18, 24, 33, 0.04);
+
+  --border: rgba(18, 24, 33, 0.09);
+  --border-strong: rgba(18, 24, 33, 0.17);
+
+  --text-primary: #121821;
+  --text-secondary: #4a5566;
+  --text-tertiary: #737e8f;
+
+  --accent: #2456e0;
+  --accent-hover: #1c46bd;
+  --accent-soft: rgba(36, 86, 224, 0.1);
+  --accent-contrast: #ffffff;
+
+  --positive: #0f7a4c;
+  --positive-soft: rgba(15, 122, 76, 0.1);
+  --negative: #c8322c;
+  --negative-soft: rgba(200, 50, 44, 0.09);
+  --warning: #9a5b00;
+  --warning-soft: rgba(214, 138, 20, 0.14);
+  --info: #2456e0;
+  --info-soft: rgba(36, 86, 224, 0.1);
+
+  --focus-ring: rgba(36, 86, 224, 0.45);
+
+  --glass-bg: rgba(255, 255, 255, 0.66);
+  --glass-bg-strong: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(18, 24, 33, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.75);
+  --glass-shadow: 0 1px 2px rgba(18, 24, 33, 0.04), 0 8px 28px rgba(18, 24, 33, 0.07);
+  --glass-shadow-strong: 0 2px 6px rgba(18, 24, 33, 0.06), 0 24px 64px rgba(18, 24, 33, 0.16);
+  --scrim: rgba(18, 24, 33, 0.28);
+
+  --shadow-surface: 0 1px 2px rgba(18, 24, 33, 0.04);
+
+  /* Gráficos — marcas (validadas com dataviz/validate_palette.js contra #ffffff). */
+  --chart-positive: #12805a;
+  --chart-negative: #cf3a33;
+  --chart-line: #121821;
+  --chart-grid: #e6e9ee;
+  --chart-baseline: #b9c0cb;
+  --chart-axis: #737e8f;
+  --chart-deficit-zone: rgba(207, 58, 51, 0.05);
+  --chart-range: rgba(18, 24, 33, 0.06);
+  /* Fluxo positivo em azul (RF06); negativo em vermelho com hachura. */
+  --chart-inflow: #2a78d6;
+  --chart-discounted: #6b4fd8;
+  /* Cor de cenário por posição fixa (1–6), nunca por ordem de exibição. */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
 }
 
-* {
-  border-color: var(--color-ink-200);
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #080a0f;
+  --canvas-glow: rgba(109, 140, 255, 0.08);
+  --surface: #10131a;
+  --surface-muted: #0d1016;
+  --surface-elevated: #161a23;
+  --surface-derived: #131720;
+  --surface-hover: rgba(255, 255, 255, 0.04);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+
+  --text-primary: #e8ecf2;
+  --text-secondary: #a6afbd;
+  --text-tertiary: #737d8c;
+
+  --accent: #7390ff;
+  --accent-hover: #8fa6ff;
+  --accent-soft: rgba(115, 144, 255, 0.14);
+  --accent-contrast: #0a0d14;
+
+  --positive: #3fcb8c;
+  --positive-soft: rgba(63, 203, 140, 0.12);
+  --negative: #ff7a70;
+  --negative-soft: rgba(255, 122, 112, 0.12);
+  --warning: #f2b44f;
+  --warning-soft: rgba(242, 180, 79, 0.13);
+  --info: #7390ff;
+  --info-soft: rgba(115, 144, 255, 0.14);
+
+  --focus-ring: rgba(115, 144, 255, 0.55);
+
+  --glass-bg: rgba(20, 24, 32, 0.65);
+  --glass-bg-strong: rgba(22, 26, 35, 0.84);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 36px rgba(0, 0, 0, 0.4);
+  --glass-shadow-strong: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 28px 80px rgba(0, 0, 0, 0.6);
+  --scrim: rgba(3, 4, 7, 0.6);
+
+  --shadow-surface: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+
+  /* Validadas contra #10131a; positivo/negativo exigem codificação secundária (hachura + posição). */
+  --chart-positive: #1a9463;
+  --chart-negative: #e0504a;
+  --chart-line: #e8ecf2;
+  --chart-grid: #1c212b;
+  --chart-baseline: #3a414d;
+  --chart-axis: #737d8c;
+  --chart-deficit-zone: rgba(224, 80, 74, 0.07);
+  --chart-range: rgba(255, 255, 255, 0.06);
+  --chart-inflow: #3987e5;
+  --chart-discounted: #9085e9;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+}
+
+@theme {
+  --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --blur-sm: 8px;
+  --blur-md: 18px;
+  --blur-lg: 28px;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  --animate-fade-in: fade-in 140ms var(--ease-out-soft) both;
+  --animate-pop-in: pop-in 160ms var(--ease-out-soft) both;
+  --animate-flash: flash 700ms var(--ease-out-soft);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes flash {
+    from {
+      background-color: var(--accent-soft);
+    }
+    to {
+      background-color: transparent;
+    }
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-elevated: var(--surface-elevated);
+  --color-derived: var(--surface-derived);
+  --color-hover: var(--surface-hover);
+
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+
+  --color-fg: var(--text-primary);
+  --color-fg-2: var(--text-secondary);
+  --color-fg-3: var(--text-tertiary);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+}
+
+/* Vidro: usado só em controles, popovers, overlays e modais — nunca na tabela ou nos gráficos. */
+@utility glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(160%);
+  backdrop-filter: blur(var(--blur-md)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+@utility glass-strong {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(170%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(170%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-strong);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-strong {
+    background: var(--surface-elevated);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--focus-ring);
+  }
 }
 
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--color-ink-50);
-  color: var(--color-ink-900);
+  background-color: var(--canvas);
+  background-image: radial-gradient(1100px 420px at 50% -220px, var(--canvas-glow), transparent 70%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  border-color: var(--border);
+}
+
 ::selection {
-  background: var(--color-brand-200);
-  color: var(--color-brand-900);
+  background: var(--accent-soft);
+  color: var(--text-primary);
 }
 
-.tabular {
-  font-variant-numeric: tabular-nums;
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type='number'] {
-  -moz-appearance: textfield;
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: var(--color-ink-200);
-  border-radius: 999px;
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+  body {
+    background: #ffffff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-break {
+    break-before: page;
+  }
+  .print-avoid {
+    break-inside: avoid;
+  }
 }
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
+
+.tema-claro {
+  color: var(--text-primary);
+  background-color: var(--canvas);
 }

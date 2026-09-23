@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
+import { BrandMark } from '@/components/ui/Icon'
+import { ThemeToggle } from '@/components/app/TopBar'
 
-const pontos = [
-  'Projete receitas, despesas, investimentos e residual mês a mês.',
-  'Veja o maior déficit, a necessidade de capital e o mês de recuperação.',
-  'Compare três cenários e identifique o que muda a decisão.',
-]
-
+/**
+ * Moldura das telas de acesso: centrada, sem ilustração. A única assinatura
+ * visual é a curva da marca — um acumulado que afunda e se recupera.
+ */
 export function AuthLayout({
   title,
   subtitle,
@@ -18,75 +18,43 @@ export function AuthLayout({
   footer: ReactNode
 }) {
   return (
-    <div className="flex min-h-svh w-full bg-ink-50">
-      <div className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-ink-950 px-10 py-10 text-white lg:flex">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            background:
-              'radial-gradient(60% 50% at 15% 10%, rgba(122,123,242,0.35) 0%, rgba(10,10,14,0) 60%), radial-gradient(50% 45% at 90% 85%, rgba(91,87,232,0.30) 0%, rgba(10,10,14,0) 60%)',
-          }}
+    <div className="relative flex min-h-svh flex-col">
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-[18vh] h-[46vh] w-full opacity-60"
+        viewBox="0 0 1200 400"
+        preserveAspectRatio="none"
+      >
+        <line x1="0" x2="1200" y1="170" y2="170" stroke="var(--border-strong)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        <path
+          d="M0 120 C 180 120, 260 330, 430 330 S 700 160, 820 120 S 1060 40, 1200 30"
+          fill="none"
+          stroke="var(--border-strong)"
+          strokeWidth="1.5"
+          vectorEffect="non-scaling-stroke"
         />
-        <div className="relative flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500 font-mono text-sm font-bold">
-            DFC
-          </div>
-          <span className="text-sm font-semibold tracking-wide text-ink-100">
-            DFC Planner
-          </span>
+      </svg>
+
+      <header className="relative flex items-center justify-between px-5 py-4 sm:px-8">
+        <div className="flex items-center gap-2.5">
+          <BrandMark className="h-7 w-7" />
+          <span className="text-[14px] font-semibold tracking-[-0.01em] text-fg">DFC Planner</span>
         </div>
+        <ThemeToggle />
+      </header>
 
-        <div className="relative">
-          <h1 className="max-w-sm text-3xl font-semibold leading-tight tracking-tight text-white">
-            Decida com o fluxo de caixa do projeto, não com achismo.
-          </h1>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-300">
-            Planejador de fluxo de caixa para apoiar a decisão de quanto capital é
-            necessário e quando o investimento se recupera.
-          </p>
-          <ul className="mt-6 flex flex-col gap-3">
-            {pontos.map((p) => (
-              <li key={p} className="flex items-start gap-2.5 text-sm text-ink-200">
-                <svg
-                  className="mt-0.5 h-4 w-4 shrink-0 text-brand-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {p}
-              </li>
-            ))}
-          </ul>
+      <main className="relative flex flex-1 items-center justify-center px-5 pt-4 pb-16">
+        <div className="glass w-full max-w-100 rounded-[22px] px-6 py-7 sm:px-8 sm:py-8">
+          <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-fg">{title}</h1>
+          <p className="mt-1 text-[13px] text-fg-2">{subtitle}</p>
+          <div className="mt-6">{children}</div>
+          <div className="mt-6 border-t border-line pt-5 text-center text-[13px] text-fg-2">{footer}</div>
         </div>
+      </main>
 
-        <p className="relative text-xs text-ink-400">
-          Trabalho acadêmico — Engenharia Econômica, SENAI FATESG.
-        </p>
-      </div>
-
-      <div className="flex w-full flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10">
-        <div className="w-full max-w-sm">
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 font-mono text-xs font-bold text-white">
-              DFC
-            </div>
-            <span className="text-sm font-semibold text-ink-900">DFC Planner</span>
-          </div>
-
-          <h2 className="text-2xl font-semibold tracking-tight text-ink-900">{title}</h2>
-          <p className="mt-1.5 text-sm text-ink-500">{subtitle}</p>
-
-          <div className="mt-7">{children}</div>
-
-          <div className="mt-6 text-center text-sm text-ink-500">{footer}</div>
-        </div>
-      </div>
+      <footer className="relative px-5 pb-5 text-center text-xs text-fg-3">
+        Engenharia Econômica · SENAI FATESG. Autenticação demonstrativa: conta e dados ficam neste navegador.
+      </footer>
     </div>
   )
 }
