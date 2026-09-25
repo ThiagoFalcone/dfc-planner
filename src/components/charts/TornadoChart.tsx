@@ -51,7 +51,16 @@ function TickCategoria({ x, y, payload, dados, t }: { x?: number | string; y?: n
  * déficit ocorre antes de qualquer receita) — isso é lido do cálculo, não
  * ocultado.
  */
-export function TornadoChart({ linhas, metricaRotulo }: { linhas: LinhaTornado[]; metricaRotulo: string }) {
+export function TornadoChart({
+  linhas,
+  metricaRotulo,
+  menorEhMelhor = false,
+}: {
+  linhas: LinhaTornado[]
+  metricaRotulo: string
+  /** true para métricas em que um valor menor é o resultado desejável (ex.: capital necessário). */
+  menorEhMelhor?: boolean
+}) {
   const t = useChartTheme()
   if (linhas.length === 0) {
     return <p className="px-3 py-10 text-center text-[13px] text-fg-3">Nenhuma variável com valor no horizonte para testar.</p>
@@ -75,13 +84,16 @@ export function TornadoChart({ linhas, metricaRotulo }: { linhas: LinhaTornado[]
             <Tooltip content={(p) => <Tip {...p} t={t} />} cursor={{ fill: t.range }} isAnimationActive={false} />
             <Bar dataKey="baixo" stackId="s" fill="transparent" isAnimationActive={false} />
             <Bar dataKey="largura" stackId="s" radius={[3, 3, 3, 3]} maxBarSize={22} isAnimationActive={t.animar} animationDuration={t.duracao}>
-              {dados.map((d) => (
-                <Cell
-                  key={d.rotulo}
-                  fill={d.largura < 1 ? 'transparent' : d.comReducao <= d.comAumento ? t.negative : t.positive}
-                  fillOpacity={0.75}
-                />
-              ))}
+              {dados.map((d) => {
+                const pioraComReducao = menorEhMelhor ? d.comReducao > d.comAumento : d.comReducao <= d.comAumento
+                return (
+                  <Cell
+                    key={d.rotulo}
+                    fill={d.largura < 1 ? 'transparent' : pioraComReducao ? t.negative : t.positive}
+                    fillOpacity={0.75}
+                  />
+                )
+              })}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
