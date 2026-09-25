@@ -198,6 +198,7 @@ export function WorkspaceHeader({
   historico,
   acoes,
   mostrarContexto = true,
+  mostrarSeletorProjeto = true,
 }: {
   titulo: string
   descricao?: string
@@ -216,6 +217,8 @@ export function WorkspaceHeader({
   historico: ControleHistorico
   acoes?: ReactNode
   mostrarContexto?: boolean
+  /** false na página "Todos os planejamentos": a tela não é escopada a um único projeto. */
+  mostrarSeletorProjeto?: boolean
 }) {
   const agora = useAgora()
   const meses = ativo.editavel.periodos.map((p) => p.mes)
@@ -229,15 +232,19 @@ export function WorkspaceHeader({
         <div className="min-w-0">
           <nav aria-label="Local" className="flex items-center gap-1 text-[13px] text-fg-3">
             <span>DFC Planner</span>
-            <span aria-hidden="true">/</span>
-            <NomeProjeto nome={nomeProjeto} onRenomear={onRenomear} />
-            <SeletorProjeto
-              projetos={projetos}
-              atualId={projetoId}
-              onAbrir={onAbrirProjeto}
-              onVerTodos={onVerProjetos}
-              onNovo={onNovoProjeto}
-            />
+            {mostrarSeletorProjeto && (
+              <>
+                <span aria-hidden="true">/</span>
+                <NomeProjeto nome={nomeProjeto} onRenomear={onRenomear} />
+                <SeletorProjeto
+                  projetos={projetos}
+                  atualId={projetoId}
+                  onAbrir={onAbrirProjeto}
+                  onVerTodos={onVerProjetos}
+                  onNovo={onNovoProjeto}
+                />
+              </>
+            )}
           </nav>
           <h1 className="mt-1 text-[26px] leading-tight font-semibold tracking-[-0.025em] text-fg sm:text-[28px]">
             {titulo}
