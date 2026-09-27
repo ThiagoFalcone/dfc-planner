@@ -43,20 +43,23 @@ Extensões além do mínimo da atividade, construídas sobre o mesmo núcleo de 
   informada por cenário, como leitura complementar aos indicadores em caixa corrente.
 - **Rastreabilidade e auditoria local**: histórico de alterações por planejamento
   (quem, quando, de que valor para que valor), com filtros e exportação.
-- Tela de login/cadastro (autenticação simulada, ver seção abaixo) como base de
-  produto, a pedido da equipe. **Não faz parte dos requisitos da disciplina.**
+- Tela de login/cadastro (autenticação real, contra o backend, ver seção abaixo)
+  como base de produto, a pedido da equipe. **Não faz parte dos requisitos da
+  disciplina.**
 
 ## Como executar localmente
 
-Requer Node.js 20+ e npm.
+Requer Node.js 20+, Python 3.12+ e PostgreSQL instalado localmente (sem Docker).
+São dois processos rodando lado a lado: o backend (FastAPI, porta 8000) e o
+frontend (Vite, porta 5173). Configure o backend primeiro (seção abaixo), depois:
 
 ```bash
+cp .env.example .env
 npm install
 npm run dev
 ```
 
-Abra `http://localhost:5173`. Não há serviços pagos, backend ou variáveis de ambiente
-necessárias: tudo roda localmente, inclusive a "conta" de usuário (ver abaixo).
+Abra `http://localhost:5173`.
 
 Outros comandos:
 
@@ -66,19 +69,45 @@ npm run preview   # serve a build de produção localmente
 npm run test      # roda os testes automatizados (Vitest)
 ```
 
-## Login (autenticação simulada)
+## Backend
 
-Não é necessário cadastro: use a conta de demonstração já preenchida na tela de
-login, com o botão "Usar a conta de demonstração".
+O backend é uma API real (FastAPI + PostgreSQL) — não há mais dados simulados no
+navegador.
 
-- **E-mail:** `demo@dfcplanner.app`
-- **Senha:** `demo1234`
+1. Instale o PostgreSQL localmente e crie o banco:
 
-Cadastro e login não chamam nenhum servidor: os dados ficam apenas no `localStorage`
-do navegador (ver `src/auth/mockAuthService.ts`). Essa camada foi escrita atrás de uma
-interface (`AuthService`, em `src/auth/types.ts`), pensada para ser trocada por um
-backend real no futuro sem alterar nenhuma tela. Basta trocar a instância exportada em
-`src/auth/AuthContext.tsx`.
+   ```bash
+   createdb dfc_planner
+   ```
+
+2. Copie o arquivo de variáveis de ambiente do backend e ajuste se necessário
+   (usuário/senha do banco, chave do JWT):
+
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+
+3. Instale as dependências Python (em um virtualenv, se preferir):
+
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+4. Rode a migração para criar as tabelas:
+
+   ```bash
+   alembic upgrade head
+   ```
+
+5. Suba o servidor:
+
+   ```bash
+   uvicorn app.main:app --reload --port 8000
+   ```
+
+A conta de demonstração (`demo@dfcplanner.app` / `demo1234`) não existe mais por
+padrão: agora é preciso se cadastrar de verdade na tela de cadastro do frontend.
 
 ## Dados de exemplo
 
@@ -134,11 +163,12 @@ do agente de IA exigida no Passo 3 da atividade.
 
 ```
 src/
-  auth/            Autenticação simulada (login, cadastro, sessão) e sua interface
+  auth/            Autenticação (login, cadastro, sessão) contra a API real e sua interface
   audit/           Contexto React da auditoria (histórico de alterações)
   theme/           Tema claro/escuro/sistema
   domain/          Tipos e fábricas do domínio (cenário, planejamento, auditoria)
-  services/        Persistência local: storage, planejamentos e auditoria
+  services/        Persistência via HTTP contra o backend (planejamentos e
+                   auditoria) e storage local (sessão e tema)
   components/
     ui/            Botão, campo de texto, popover, modal, glass: primitivos reutilizáveis
     financial/     Planilha, KPIs, gráficos de apoio, insights, importação
@@ -158,6 +188,11 @@ requisitos.md          Requisitos numerados com critério de aceitação
 modelo_calculos.md     Variáveis, unidades, fórmulas, convenções, caso conferido à mão
 registro_ia.md         Interações com o agente de IA usado no desenvolvimento
 relatorio_decisao.md   Modelo do relatório de decisão (até 2 páginas)
+
+backend/
+  app/routers/     Rotas da API: auth, projetos, auditoria
+  alembic/         Migrações do banco de dados (PostgreSQL)
+  tests/           Testes automatizados do backend (Pytest)
 ```
 
 ## Limitações
@@ -167,11 +202,12 @@ relatorio_decisao.md   Modelo do relatório de decisão (até 2 páginas)
   enunciado. VPL/TIR/payback descontado existem como leitura complementar opcional.
 - A necessidade de capital não inclui custo de captação (juros) sobre o valor
   levantado.
-- Autenticação é simulada (localStorage): não é um sistema de contas real.
-- Auditoria é local ao navegador, não é uma trilha inviolável; ver o aviso na própria
-  tela de Histórico e auditoria.
 - A análise de sensibilidade e o simulador variam entradas em percentuais fixos; não
   fazem otimização nem buscam automaticamente o pior cenário.
+- Fora de escopo deliberadamente, por serem características de produto real e não
+  de entrega acadêmica: recuperação de senha por e-mail, verificação de e-mail,
+  rate limiting/proteção contra força bruta, backups formais, monitoramento em
+  produção e hospedagem remota — tudo roda localmente.
 
 ## O que ainda falta fazer manualmente (equipe, antes da entrega)
 
