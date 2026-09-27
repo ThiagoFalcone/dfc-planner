@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useTheme } from '@/theme/ThemeContext'
 import { BrandMark, Icon } from '@/components/ui/Icon'
 import { MenuItem, MenuLabel, Popover } from '@/components/ui/Popover'
@@ -8,6 +8,25 @@ import { nomeCurto } from '@/domain/scenario/types'
 import { NavegacaoDesktop, ROTAS, type ItemNavegacao } from './Navigation'
 import { UserMenu, type SecaoConta } from './UserMenu'
 import { SaveStatus } from './SaveStatus'
+
+/** Acesso direto à lista de planejamentos — não faz parte das abas de um único projeto, por isso fica à parte. */
+function AtalhoProjetos() {
+  return (
+    <NavLink
+      to={ROTAS.projetos}
+      aria-label="Todos os planejamentos"
+      title="Todos os planejamentos"
+      className={({ isActive }) =>
+        clsx(
+          'focus-ring flex h-9 w-9 items-center justify-center rounded-[10px] transition-colors duration-120',
+          isActive ? 'bg-hover text-fg' : 'text-fg-2 hover:bg-hover hover:text-fg',
+        )
+      }
+    >
+      <Icon nome="pasta" />
+    </NavLink>
+  )
+}
 
 export function ThemeToggle() {
   const { tema, alternar } = useTheme()
@@ -124,6 +143,7 @@ export function TopBar({
             </kbd>
           </button>
           <SaveStatus salvoEm={salvoEm} className="mx-2 hidden 2xl:flex" />
+          <AtalhoProjetos />
           <ThemeToggle />
           <Notificacoes
             cenarios={cenarios}

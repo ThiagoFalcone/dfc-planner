@@ -159,7 +159,11 @@ export function SensibilidadePage() {
           }
         />
         <div className="px-4 pb-5">
-          <TornadoChart linhas={tornado} metricaRotulo={metrica === 'necessidadeCapital' ? 'capital necessário' : 'saldo final'} />
+          <TornadoChart
+            linhas={tornado}
+            metricaRotulo={metrica === 'necessidadeCapital' ? 'capital necessário' : 'saldo final'}
+            menorEhMelhor={metrica === 'necessidadeCapital'}
+          />
         </div>
       </Surface>
 

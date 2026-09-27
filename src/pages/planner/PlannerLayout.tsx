@@ -456,6 +456,7 @@ function Workspace({
           salvoEm={planner.salvoEm}
           historico={planner}
           mostrarContexto={pagina.contexto !== false}
+          mostrarSeletorProjeto={location.pathname !== ROTAS.projetos}
           acoes={
             location.pathname === ROTAS.projetos ? (
               <Button size="sm" variant="primary" onClick={() => setNovoProjetoAberto(true)}>
