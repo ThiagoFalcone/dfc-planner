@@ -12,18 +12,17 @@ def _criar_usuario(db) -> Usuario:
 
 
 def test_rota_protegida_sem_token_retorna_401(client):
-    resposta = client.get("/_protegida_teste")
-    assert resposta.status_code == 401
+    assert client.get("/auth/me").status_code == 401
 
 
 def test_rota_protegida_com_token_invalido_retorna_401(client):
-    resposta = client.get("/_protegida_teste", headers={"Authorization": "Bearer lixo.invalido"})
+    resposta = client.get("/auth/me", headers={"Authorization": "Bearer lixo.invalido"})
     assert resposta.status_code == 401
 
 
 def test_rota_protegida_com_token_valido_retorna_200(client, db):
     usuario = _criar_usuario(db)
     token = gerar_token(usuario.id)
-    resposta = client.get("/_protegida_teste", headers={"Authorization": f"Bearer {token}"})
+    resposta = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
     assert resposta.status_code == 200
-    assert resposta.json() == {"usuario_id": usuario.id}
+    assert resposta.json()["id"] == usuario.id
