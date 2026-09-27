@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useState, type ReactNode } from 'react'
 import type { CenarioComputado } from '@/hooks/usePlanner'
+import type { StatusSalvamento } from '@/hooks/useAutosave'
 import type { ResumoProjeto } from '@/domain/scenario/types'
 import { formatarDataHora, rotuloMes, tempoRelativo } from '@/lib/formato'
 import { useAgora } from '@/hooks/useAgora'
@@ -195,6 +196,7 @@ export function WorkspaceHeader({
   onSelecionarCenario,
   atualizadoEm,
   salvoEm,
+  statusSalvamento,
   historico,
   acoes,
   mostrarContexto = true,
@@ -214,6 +216,7 @@ export function WorkspaceHeader({
   onSelecionarCenario(id: string): void
   atualizadoEm: string
   salvoEm: string | null
+  statusSalvamento: StatusSalvamento
   historico: ControleHistorico
   acoes?: ReactNode
   mostrarContexto?: boolean
@@ -277,7 +280,7 @@ export function WorkspaceHeader({
             </Meta>
           </div>
           <div className="flex items-center gap-2 sm:ml-auto">
-            <SaveStatus salvoEm={salvoEm} className="flex px-1 2xl:hidden" />
+            <SaveStatus status={statusSalvamento} salvoEm={salvoEm} className="flex px-1 2xl:hidden" />
             <div className="flex items-center" role="group" aria-label="Histórico de alterações">
               <BotaoHistorico
                 icone="voltar"
