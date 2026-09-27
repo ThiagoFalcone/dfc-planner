@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { mockAuthService } from './mockAuthService'
+import { httpAuthService } from './httpAuthService'
 import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
 import { criarEvento, criarRepositorioLocal } from '@/services/audit/auditRepository'
 import { CHAVES } from '@/services/storage/localStore'
@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 // Ponto único de injeção do serviço de autenticação: troque aqui quando
 // existir um backend real, sem tocar em nenhuma tela.
-const authService = mockAuthService
+const authService = httpAuthService
 
 function registrarSessao(usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
   criarRepositorioLocal(usuario.id).registrar(
