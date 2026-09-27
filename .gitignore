@@ -13,3 +13,6 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# worktrees de desenvolvimento isolado
+.worktrees
