@@ -1,24 +1,18 @@
 /**
  * Único ponto de acesso a localStorage/sessionStorage da aplicação.
  *
- * Tudo que o DFC Planner persiste no navegador passa por aqui: sessão
- * simulada, preferência de tema, estado do planejamento e histórico local.
- * Leituras são validadas por um type guard, porque o conteúdo do storage
- * pode ter sido editado à mão ou vir de uma versão antiga do app.
+ * Tudo que o DFC Planner persiste no navegador passa por aqui: sessão HTTP e
+ * preferência de tema. Leituras são validadas por um type guard, porque o
+ * conteúdo do storage pode ter sido editado à mão ou vir de uma versão
+ * antiga do app.
  */
 
 const PREFIXO = 'dfc-planner:'
 
 export const CHAVES = {
-  usuarios: `${PREFIXO}usuarios`,
   sessao: `${PREFIXO}sessao`,
   // Duplicada no script inline de index.html (aplica o tema antes da pintura).
   tema: `${PREFIXO}tema`,
-  /** Formato anterior (um único planejamento); lido só para migração. */
-  planner: (usuarioId: string) => `${PREFIXO}planner:${usuarioId}`,
-  projetos: (usuarioId: string) => `${PREFIXO}projetos:${usuarioId}`,
-  projeto: (usuarioId: string, projetoId: string) => `${PREFIXO}projeto:${usuarioId}:${projetoId}`,
-  auditoria: (usuarioId: string) => `${PREFIXO}auditoria:${usuarioId}`,
 } as const
 
 export type TipoArmazenamento = 'local' | 'sessao'
