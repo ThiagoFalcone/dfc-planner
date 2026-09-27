@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { httpAuthService } from './httpAuthService'
 import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
-import { criarEvento, criarRepositorioLocal } from '@/services/audit/auditRepository'
+import { criarRepositorioHttpAuditoria } from '@/services/audit/httpAuditRepository'
 import { CHAVES } from '@/services/storage/localStore'
 
 interface AuthContextValue {
@@ -19,22 +19,19 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 // existir um backend real, sem tocar em nenhuma tela.
 const authService = httpAuthService
 
-function registrarSessao(usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
-  criarRepositorioLocal(usuario.id).registrar(
-    criarEvento(
-      { id: usuario.id, nome: usuario.nome },
-      {
-        scenario: null,
-        category: 'sessao',
-        entity: 'sessao',
-        field: null,
-        previousValue: null,
-        newValue: null,
-        action,
-        summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
-      },
-    ),
-  )
+function registrarSessao(_usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
+  criarRepositorioHttpAuditoria()
+    .registrar({
+      scenario: null,
+      category: 'sessao',
+      entity: 'sessao',
+      field: null,
+      previousValue: null,
+      newValue: null,
+      action,
+      summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
+    })
+    .catch(() => {})
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
