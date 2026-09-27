@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import obter_settings
-from app.routers import auth
+from app.routers import auth, projetos
 
 settings = obter_settings()
 
@@ -17,6 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(projetos.router)
 
 
 @app.get("/health")
