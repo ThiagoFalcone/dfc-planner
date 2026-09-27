@@ -83,3 +83,35 @@ class ResumoProjetoSchema(CamelModel):
 
 class AtivoSchema(CamelModel):
     projeto_id: str | None
+
+
+class NovoEventoRequest(CamelModel):
+    project: dict | None = None
+    scenario: dict | None = None
+    category: str
+    entity: str
+    field: str | None = None
+    previous_value: str | None = None
+    new_value: str | None = None
+    action: str
+    summary: str
+
+
+class ProjetoRefSchema(CamelModel):
+    id: str
+    nome: str
+
+
+class EventoResponse(CamelModel):
+    id: str
+    timestamp: str
+    user: dict
+    project: ProjetoRefSchema | None = None
+    scenario: ProjetoRefSchema | None = None
+    category: str
+    entity: str
+    field: str | None
+    previous_value: str | None
+    new_value: str | None
+    action: str
+    summary: str
