@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import obter_settings
+from app.deps import get_current_user
+from app.models import Usuario
 
 settings = obter_settings()
 
@@ -21,3 +23,8 @@ app.add_middleware(
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/_protegida_teste")
+def _protegida_teste(usuario: Usuario = Depends(get_current_user)) -> dict[str, str]:
+    return {"usuario_id": usuario.id}
