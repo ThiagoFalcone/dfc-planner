@@ -140,7 +140,7 @@ Fórmulas completas, convenções de sinal e casos de borda: `modelo_calculos.md
 npm run test
 ```
 
-71 testes automatizados (Vitest), cobrindo:
+84 testes automatizados (Vitest) no frontend, cobrindo:
 
 - `src/lib/calculos.test.ts` (15 testes, núcleo obrigatório da Opção 3): fórmula do
   fluxo, o caso de referência completo do EduTask, cenário sem recuperação, alteração
@@ -149,15 +149,19 @@ npm run test
 - `src/lib/financeiro.test.ts`, `src/lib/simulacao.test.ts`, `src/lib/importar.test.ts`,
   `src/lib/formato.test.ts`: as bibliotecas complementares (VPL/TIR, simulador "e se",
   importação de arquivos, formatação).
-- `src/services/audit/auditRepository.test.ts`,
-  `src/services/planner/plannerRepository.test.ts`: persistência local, isolamento por
-  usuário e migração automática do formato de dados anterior.
+- `src/services/audit/httpAuditRepository.test.ts`,
+  `src/services/planner/httpPlannerRepository.test.ts`: as chamadas HTTP contra o
+  backend real (criação com fallback PUT→POST, exclusão, extração do projeto ativo,
+  envio sem campos forjados de id/timestamp/usuário).
 - `src/App.test.tsx`: fluxo de ponta a ponta (login, edição de célula, cálculo,
   auditoria, logout, persistência entre sessões).
 
-Todos os 71 testes passam (`npx vitest run`). O caso do EduTask também foi conferido
-manualmente, linha a linha, em `modelo_calculos.md`: essa é a conferência independente
-do agente de IA exigida no Passo 3 da atividade.
+Todos os 84 testes do frontend passam (`npx vitest run`). O backend tem sua própria
+suíte, com 30 testes automatizados (Pytest — health, security, deps, auth, schemas,
+projetos, auditoria, models), rodada com `pytest -v` a partir de `backend/`; todos
+passam. O caso do EduTask também foi conferido manualmente, linha a linha, em
+`modelo_calculos.md`: essa é a conferência independente do agente de IA exigida no
+Passo 3 da atividade.
 
 ## Estrutura do projeto
 
