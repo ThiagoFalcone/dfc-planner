@@ -4,6 +4,7 @@ import { useTheme } from '@/theme/ThemeContext'
 import { BrandMark, Icon } from '@/components/ui/Icon'
 import { MenuItem, MenuLabel, Popover } from '@/components/ui/Popover'
 import type { CenarioComputado } from '@/hooks/usePlanner'
+import type { StatusSalvamento } from '@/hooks/useAutosave'
 import { nomeCurto } from '@/domain/scenario/types'
 import { NavegacaoDesktop, ROTAS, type ItemNavegacao } from './Navigation'
 import { UserMenu, type SecaoConta } from './UserMenu'
@@ -98,6 +99,7 @@ export function TopBar({
   itens,
   cenarios,
   salvoEm,
+  statusSalvamento,
   onAbrirPaleta,
   onAbrirConta,
   onSair,
@@ -106,6 +108,7 @@ export function TopBar({
   itens: ItemNavegacao[]
   cenarios: CenarioComputado[]
   salvoEm: string | null
+  statusSalvamento: StatusSalvamento
   onAbrirPaleta(): void
   onAbrirConta(s: SecaoConta): void
   onSair(): void
@@ -142,7 +145,7 @@ export function TopBar({
               {ehMac ? '⌘K' : 'Ctrl K'}
             </kbd>
           </button>
-          <SaveStatus salvoEm={salvoEm} className="mx-2 hidden 2xl:flex" />
+          <SaveStatus status={statusSalvamento} salvoEm={salvoEm} className="mx-2 hidden 2xl:flex" />
           <AtalhoProjetos />
           <ThemeToggle />
           <Notificacoes

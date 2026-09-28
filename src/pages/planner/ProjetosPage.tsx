@@ -138,7 +138,7 @@ export function ProjetosPage() {
         aberto={excluindo !== null}
         onFechar={() => setExcluindo(null)}
         titulo={`Excluir "${excluindo?.nome}"?`}
-        descricao="Todos os cenários, premissas e o histórico deste planejamento serão apagados deste navegador. Esta ação não pode ser desfeita."
+        descricao="Todos os cenários e premissas deste planejamento serão apagados do servidor. Esta ação não pode ser desfeita."
         rodape={
           <>
             <Button size="sm" variant="ghost" onClick={() => setExcluindo(null)}>

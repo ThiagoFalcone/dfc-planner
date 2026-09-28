@@ -30,9 +30,9 @@ export function AuditoriaPage() {
       <div className="flex gap-3 rounded-[18px] border border-line bg-surface-muted px-4 py-3.5 text-[13px] leading-relaxed text-fg-2">
         <Icon nome="escudo" className="mt-0.5 h-4 w-4 shrink-0 text-fg-3" />
         <p>
-          <span className="font-medium text-fg">Registro local, não inviolável.</span> Os eventos ficam no armazenamento
-          deste navegador e podem ser apagados por quem tem acesso a ele. Servem para rastrear o trabalho: o que mudou,
-          quando e de quanto para quanto. Uma trilha de auditoria confiável exige gravação em servidor.
+          <span className="font-medium text-fg">Registro gravado no servidor.</span> Data, hora e usuário de cada evento
+          são definidos pela API, não pelo navegador. Servem para rastrear o trabalho: o que mudou, quando e de quanto
+          para quanto.
         </p>
       </div>
 
@@ -74,8 +74,8 @@ export function AuditoriaPage() {
       <Modal
         aberto={confirmarLimpeza}
         onFechar={() => setConfirmarLimpeza(false)}
-        titulo="Apagar o histórico local?"
-        descricao="Todos os eventos deste navegador serão removidos. Fica registrado um único evento informando a limpeza. Por isso o histórico nunca parece contínuo quando não é."
+        titulo="Apagar o histórico?"
+        descricao="Todos os seus eventos serão removidos do servidor. Fica registrado um único evento informando a limpeza. Por isso o histórico nunca parece contínuo quando não é."
         rodape={
           <>
             <Button size="sm" variant="ghost" onClick={() => setConfirmarLimpeza(false)}>

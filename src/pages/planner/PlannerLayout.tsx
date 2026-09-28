@@ -8,7 +8,7 @@ import type { AuditActor, NovoAuditEvent } from '@/domain/audit/types'
 import type { EstadoPlanner, ResumoProjeto } from '@/domain/scenario/types'
 import { gerarId, nomeCurto } from '@/domain/scenario/types'
 import { criarProjeto } from '@/domain/scenario/fabricas'
-import { criarRepositorioProjetos } from '@/services/planner/plannerRepository'
+import { criarRepositorioHttpProjetos } from '@/services/planner/httpPlannerRepository'
 import { exportarCSV, exportarJSON } from '@/lib/exportar'
 import { analisarDescontado, lerTMA } from '@/lib/financeiro'
 import { TopBar } from '@/components/app/TopBar'
@@ -70,7 +70,7 @@ const PAGINAS: Record<string, { titulo: string; descricao: string; contexto?: bo
   },
   [ROTAS.auditoria]: {
     titulo: 'Histórico e auditoria',
-    descricao: 'Alterações relevantes registradas neste navegador, da mais recente para a mais antiga.',
+    descricao: 'Alterações relevantes registradas no servidor, da mais recente para a mais antiga.',
   },
   [ROTAS.projetos]: {
     titulo: 'Planejamentos',
@@ -99,58 +99,82 @@ function eventoProjeto(p: { id: string; nome: string }, dados: Omit<NovoAuditEve
 /** CRUD de planejamentos. O workspace é remontado ao trocar de planejamento (histórico de desfazer próprio). */
 function GestorProjetos({ ator }: { ator: AuditActor }) {
   const { registrar } = useAudit()
-  const repo = useMemo(() => criarRepositorioProjetos(ator.id), [ator.id])
-  const [ativoId, setAtivoId] = useState<string | null>(() => repo.ativoId())
-  const [lista, setLista] = useState<ResumoProjeto[]>(() => repo.listar())
+  const repo = useMemo(() => criarRepositorioHttpProjetos(), [])
+  const [lista, setLista] = useState<ResumoProjeto[]>([])
+  const [ativoId, setAtivoId] = useState<string | null>(null)
+  const [inicial, setInicial] = useState<EstadoPlanner | null>(null)
+  const [erroCarregamento, setErroCarregamento] = useState(false)
 
-  const recarregar = useCallback(() => setLista(repo.listar()), [repo])
+  const recarregar = useCallback(() => {
+    // Falha só no refresh da lista (após salvar/criar/etc.) não derruba o
+    // workspace: mantém a lista anterior. erroCarregamento fica reservado
+    // para a carga inicial, quando ainda não há nada para mostrar.
+    repo.listar().then(setLista).catch(() => {})
+  }, [repo])
 
   // Primeiro acesso: nasce um planejamento com o exemplo do enunciado.
   useEffect(() => {
-    if (ativoId) return
-    const existente = repo.ativoId()
-    if (existente) {
-      setAtivoId(existente)
-      return
+    let cancelado = false
+    async function carregarOuIniciar() {
+      try {
+        const [listaAtual, ativoAtual] = await Promise.all([repo.listar(), repo.ativoId()])
+        if (cancelado) return
+        let alvo = ativoAtual
+        let listaFinal = listaAtual
+        if (!alvo) {
+          const agora = new Date().toISOString()
+          const novo = criarProjeto({ nome: 'Projeto EduTask', partida: 'exemplo' }, { responsavel: ator.nome, agora })
+          await repo.salvar(novo)
+          await repo.definirAtivo(novo.id)
+          registrar(
+            eventoProjeto(
+              { id: novo.id, nome: novo.nomeProjeto },
+              {
+                field: null,
+                previousValue: null,
+                newValue: 'Exemplo do enunciado',
+                action: 'CREATE',
+                summary: 'Planejamento criado com os cenários Base, Pessimista e Otimista',
+              },
+            ),
+          )
+          alvo = novo.id
+          listaFinal = await repo.listar()
+        }
+        const estado = await repo.carregar(alvo)
+        if (cancelado) return
+        setLista(listaFinal)
+        setAtivoId(alvo)
+        setInicial(estado)
+      } catch {
+        if (!cancelado) setErroCarregamento(true)
+      }
     }
-    const agora = new Date().toISOString()
-    const novo = criarProjeto({ nome: 'Projeto EduTask', partida: 'exemplo' }, { responsavel: ator.nome, agora })
-    repo.salvar(novo)
-    repo.definirAtivo(novo.id)
-    registrar(
-      eventoProjeto(
-        { id: novo.id, nome: novo.nomeProjeto },
-        { field: null, previousValue: null, newValue: 'Exemplo do enunciado', action: 'CREATE', summary: 'Planejamento criado com os cenários Base, Pessimista e Otimista' },
-      ),
-    )
-    setAtivoId(novo.id)
-    recarregar()
-  }, [ativoId, repo, ator.nome, registrar, recarregar])
+    carregarOuIniciar()
+    return () => {
+      cancelado = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const inicial = useMemo(() => (ativoId ? repo.carregar(ativoId) : null), [ativoId, repo])
-
-  const salvar = useCallback(
-    (e: EstadoPlanner) => {
-      const ok = repo.salvar(e)
-      if (ok) recarregar()
-      return ok
-    },
-    [repo, recarregar],
-  )
+  const salvar = useCallback((e: EstadoPlanner) => repo.salvar(e).then(recarregar), [repo, recarregar])
 
   const abrir = useCallback(
-    (id: string) => {
-      const alvo = repo.listar().find((p) => p.id === id)
+    async (id: string) => {
+      const listaAtual = await repo.listar()
+      const alvo = listaAtual.find((p) => p.id === id)
       if (!alvo || id === ativoId) return
-      repo.definirAtivo(id)
+      await repo.definirAtivo(id)
+      const estado = await repo.carregar(id)
       setAtivoId(id)
+      setInicial(estado)
       registrar(eventoProjeto(alvo, { field: null, previousValue: null, newValue: alvo.nome, action: 'SWITCH', summary: 'Planejamento aberto' }))
     },
     [repo, ativoId, registrar],
   )
 
   const criar = useCallback(
-    (o: OpcoesNovoProjeto) => {
+    async (o: OpcoesNovoProjeto) => {
       const agora = new Date().toISOString()
       const novo = criarProjeto(
         {
@@ -162,8 +186,8 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
         },
         { responsavel: ator.nome, agora },
       )
-      repo.salvar(novo)
-      repo.definirAtivo(novo.id)
+      await repo.salvar(novo)
+      await repo.definirAtivo(novo.id)
       registrar(
         eventoProjeto(
           { id: novo.id, nome: novo.nomeProjeto },
@@ -176,18 +200,20 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
           },
         ),
       )
+      const estado = await repo.carregar(novo.id)
       setAtivoId(novo.id)
+      setInicial(estado)
       recarregar()
     },
     [repo, ator.nome, registrar, recarregar],
   )
 
   const renomearOutro = useCallback(
-    (id: string, nome: string) => {
-      const e = repo.carregar(id)
+    async (id: string, nome: string) => {
+      const e = await repo.carregar(id)
       const limpo = nome.trim()
       if (!e || !limpo || limpo === e.nomeProjeto) return
-      repo.salvar({ ...e, nomeProjeto: limpo, atualizadoEm: new Date().toISOString() })
+      await repo.salvar({ ...e, nomeProjeto: limpo, atualizadoEm: new Date().toISOString() })
       registrar(eventoProjeto({ id, nome: limpo }, { field: 'Nome do planejamento', previousValue: e.nomeProjeto, newValue: limpo, action: 'EDIT', summary: 'Planejamento renomeado' }))
       recarregar()
     },
@@ -195,12 +221,24 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
   )
 
   const duplicar = useCallback(
-    (id: string) => {
-      const e = repo.carregar(id)
+    async (id: string) => {
+      const e = await repo.carregar(id)
       if (!e) return
       const agora = new Date().toISOString()
-      const copia: EstadoPlanner = { ...e, id: gerarId('prj'), nomeProjeto: `Cópia de ${e.nomeProjeto}`, criadoEm: agora, atualizadoEm: agora }
-      repo.salvar(copia)
+      // Ids de cenário são chave primária no servidor: a cópia precisa de ids
+      // novos, nunca os do planejamento de origem (que continuam existindo).
+      const novosIds = new Map(e.cenarios.map((c) => [c.id, gerarId('cen')]))
+      const cenarios = e.cenarios.map((c) => ({ ...c, id: novosIds.get(c.id)! }))
+      const copia: EstadoPlanner = {
+        ...e,
+        id: gerarId('prj'),
+        nomeProjeto: `Cópia de ${e.nomeProjeto}`,
+        criadoEm: agora,
+        atualizadoEm: agora,
+        cenarios,
+        cenarioAtivoId: novosIds.get(e.cenarioAtivoId) ?? cenarios[0]?.id ?? '',
+      }
+      await repo.salvar(copia)
       registrar(eventoProjeto({ id: copia.id, nome: copia.nomeProjeto }, { field: null, previousValue: null, newValue: `Cópia de ${e.nomeProjeto}`, action: 'CREATE', summary: 'Planejamento duplicado' }))
       recarregar()
     },
@@ -208,15 +246,26 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
   )
 
   const excluir = useCallback(
-    (id: string) => {
-      const alvo = repo.listar().find((p) => p.id === id)
+    async (id: string) => {
+      const listaAtual = await repo.listar()
+      const alvo = listaAtual.find((p) => p.id === id)
       if (!alvo || id === ativoId) return
-      repo.excluir(id)
+      await repo.excluir(id)
       registrar(eventoProjeto(alvo, { field: null, previousValue: `${alvo.cenarios} cenários`, newValue: null, action: 'DELETE', summary: 'Planejamento excluído' }))
       recarregar()
     },
     [repo, ativoId, registrar, recarregar],
   )
+
+  if (erroCarregamento) {
+    return (
+      <div className="flex min-h-svh items-center justify-center px-4 text-center" role="alert">
+        <p className="text-sm text-fg-3">
+          Não foi possível conectar ao servidor. Confira se o backend está rodando e recarregue a página.
+        </p>
+      </div>
+    )
+  }
 
   if (!ativoId || !inicial) {
     return (
@@ -229,11 +278,11 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
   const projetos: Omit<ControleProjetos, 'renomear'> & { renomearOutro(id: string, nome: string): void } = {
     lista,
     atualId: ativoId,
-    abrir,
-    criar,
-    renomearOutro,
-    duplicar,
-    excluir,
+    abrir: (id) => void abrir(id),
+    criar: (o) => void criar(o),
+    renomearOutro: (id, nome) => void renomearOutro(id, nome),
+    duplicar: (id) => void duplicar(id),
+    excluir: (id) => void excluir(id),
   }
 
   return <Workspace key={ativoId} ator={ator} inicial={inicial} salvar={salvar} projetosBase={projetos} />
@@ -247,7 +296,7 @@ function Workspace({
 }: {
   ator: AuditActor
   inicial: EstadoPlanner
-  salvar(e: EstadoPlanner): boolean
+  salvar(e: EstadoPlanner): Promise<void>
   projetosBase: Omit<ControleProjetos, 'renomear'> & { renomearOutro(id: string, nome: string): void }
 }) {
   const { sair } = useAuth()
@@ -432,6 +481,7 @@ function Workspace({
         itens={itens}
         cenarios={cenarios}
         salvoEm={planner.salvoEm}
+        statusSalvamento={planner.statusSalvamento}
         onAbrirPaleta={abrirPaleta}
         onAbrirConta={setSecaoConta}
         onSair={() => void encerrarSessao()}
@@ -454,6 +504,7 @@ function Workspace({
           onSelecionarCenario={selecionarCenario}
           atualizadoEm={planner.atualizadoEm}
           salvoEm={planner.salvoEm}
+          statusSalvamento={planner.statusSalvamento}
           historico={planner}
           mostrarContexto={pagina.contexto !== false}
           mostrarSeletorProjeto={location.pathname !== ROTAS.projetos}

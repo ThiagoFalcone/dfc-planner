@@ -94,24 +94,13 @@ export function LoginPage() {
         <Button type="submit" variant="primary" size="lg" loading={carregando} className="mt-1 w-full">
           Entrar
         </Button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setEmail('demo@dfcplanner.app')
-            setSenha('demo1234')
-          }}
-          className="focus-ring rounded text-center text-xs text-fg-3 hover:text-fg-2"
-        >
-          Usar a conta de demonstração
-        </button>
       </form>
 
       <Modal
         aberto={ajudaSenha}
         onFechar={() => setAjudaSenha(false)}
         titulo="Recuperação de senha"
-        descricao="Recuperar senha depende de um servidor que envie o link por e-mail, e esta versão demonstrativa não tem um. Entre com a conta de demonstração ou crie uma nova conta neste navegador."
+        descricao="Recuperar senha depende de um servidor que envie o link por e-mail, e esta versão demonstrativa não tem um. Crie uma nova conta."
         rodape={
           <Button size="sm" variant="primary" onClick={() => setAjudaSenha(false)}>
             Entendi

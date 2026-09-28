@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { paraNumero } from '@/lib/calculos'
 import { cenarioExemploEdutask, criarCenarioEmBranco } from '@/data/exemploEdutask'
 import { formatarMoeda, rotuloMes } from '@/lib/formato'
@@ -10,6 +10,7 @@ import { LIMITE_CENARIOS, cenarioReferencia, gerarId, nomeCurto, proximaCor, rot
 import { computar, periodoParaInput, type CampoNumerico, type CenarioComputado } from '@/domain/scenario/computar'
 import { descricaoDerivado, novoCenario, periodosAjustados } from '@/domain/scenario/fabricas'
 import type { AuditActor, AuditCategory, AuditEntity, NovoAuditEvent } from '@/domain/audit/types'
+import { useAutosave } from './useAutosave'
 
 export type { CampoNumerico, CenarioComputado }
 export { ROTULO_CAMPO } from '@/domain/scenario/computar'
@@ -63,7 +64,7 @@ interface OpcoesPlanner {
   ator: AuditActor
   registrar(evento: NovoAuditEvent): void
   inicial: EstadoPlanner
-  salvar(estado: EstadoPlanner): boolean
+  salvar(estado: EstadoPlanner): Promise<void>
 }
 
 export type OrigemNovoCenario =
@@ -86,12 +87,7 @@ export function usePlanner({ ator, registrar, inicial, salvar }: OpcoesPlanner) 
   const estadoRef = useRef(inicial)
   const [historico, setHistorico] = useState<Historico>({ passado: [], futuro: [] })
   const historicoRef = useRef(historico)
-  const [salvoEm, setSalvoEm] = useState<string | null>(null)
-
-  // Sincronização com um sistema externo (armazenamento do navegador).
-  useEffect(() => {
-    if (salvar(estado)) setSalvoEm(estado.atualizadoEm)
-  }, [estado, salvar])
+  const { salvoEm, status: statusSalvamento } = useAutosave(estado, salvar)
 
   const definirHistorico = useCallback((h: Historico) => {
     historicoRef.current = h
@@ -628,6 +624,7 @@ export function usePlanner({ ator, registrar, inicial, salvar }: OpcoesPlanner) 
     nomeProjeto: estado.nomeProjeto,
     atualizadoEm: estado.atualizadoEm,
     salvoEm,
+    statusSalvamento,
     cenarios: computados,
     cenarioAtivo: ativo,
     cenarioAtivoId: ativo.editavel.id,

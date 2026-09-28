@@ -57,10 +57,10 @@ function tresCenarios(base: PeriodoInput[], premissasBase: string, fonteBase: Fo
   const pess: Ajustes = { ...SEM_AJUSTES, receitas: -20 }
   const otim: Ajustes = { ...SEM_AJUSTES, receitas: 20 }
   return [
-    novoCenario({ id: 'base', nome: 'Cenário base', descricaoPremissas: premissasBase, cor: 1, periodos: base, fonte: fonteBase, referencia: refBase }, meta),
+    novoCenario({ id: gerarId('cen'), nome: 'Cenário base', descricaoPremissas: premissasBase, cor: 1, periodos: base, fonte: fonteBase, referencia: refBase }, meta),
     novoCenario(
       {
-        id: 'pessimista',
+        id: gerarId('cen'),
         nome: 'Cenário pessimista',
         descricaoPremissas: `${descricaoDerivado(pess)} Hipótese: demanda mais lenta que o previsto.`,
         cor: 2,
@@ -72,7 +72,7 @@ function tresCenarios(base: PeriodoInput[], premissasBase: string, fonteBase: Fo
     ),
     novoCenario(
       {
-        id: 'otimista',
+        id: gerarId('cen'),
         nome: 'Cenário otimista',
         descricaoPremissas: `${descricaoDerivado(otim)} Hipótese: adoção mais rápida que o previsto.`,
         cor: 3,
@@ -121,6 +121,6 @@ export function criarProjeto(
     criadoEm: meta.agora,
     atualizadoEm: meta.agora,
     cenarios,
-    cenarioAtivoId: 'base',
+    cenarioAtivoId: cenarios[0].id,
   }
 }

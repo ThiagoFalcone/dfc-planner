@@ -74,8 +74,7 @@ export function AccountModal({
               <Linha rotulo="Empresa / projeto">{usuario?.empresa || '—'}</Linha>
             </dl>
             <p className="mt-3 text-xs leading-relaxed text-fg-3">
-              Os dados vêm do cadastro local deste navegador. Alterar perfil exige um servidor, que esta versão não
-              possui.
+              Os dados vêm do seu cadastro no servidor. Esta versão ainda não permite alterar o perfil.
             </p>
           </>
         )}
@@ -122,13 +121,13 @@ export function AccountModal({
               <Linha rotulo="Duração">
                 {sessao.persistente ? 'Mantida neste navegador' : 'Termina ao fechar o navegador'}
               </Linha>
-              <Linha rotulo="Autenticação">Simulada (local)</Linha>
+              <Linha rotulo="Autenticação">Token JWT (servidor)</Linha>
             </dl>
             <div className="mt-3 flex gap-2.5 rounded-xl bg-warning-soft px-3.5 py-3 text-xs leading-relaxed text-fg-2">
               <Icon nome="info" className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
               <p>
-                Esta é uma autenticação demonstrativa: conta e sessão ficam no armazenamento do navegador, sem
-                verificação em servidor. Serve para organizar o uso, não para proteger dados.
+                Esta é uma conta real: a sessão é autenticada por token JWT e os dados ficam salvos no banco de
+                dados do servidor, não no navegador. Ainda não há recuperação de senha por e-mail.
               </p>
             </div>
             <Button variant="secondary" size="sm" className="mt-4" onClick={onSair}>

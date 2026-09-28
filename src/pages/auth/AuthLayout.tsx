@@ -53,7 +53,7 @@ export function AuthLayout({
       </main>
 
       <footer className="relative px-5 pb-5 text-center text-xs text-fg-3">
-        Engenharia Econômica · SENAI FATESG. Autenticação demonstrativa: conta e dados ficam neste navegador.
+        Engenharia Econômica · SENAI FATESG. Cadastre-se para criar uma conta real, com dados salvos no servidor.
       </footer>
     </div>
   )

@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { mockAuthService } from './mockAuthService'
+import { httpAuthService } from './httpAuthService'
 import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
-import { criarEvento, criarRepositorioLocal } from '@/services/audit/auditRepository'
+import { criarRepositorioHttpAuditoria } from '@/services/audit/httpAuditRepository'
 import { CHAVES } from '@/services/storage/localStore'
+import { apiFetch, ErroAutenticacao } from '@/lib/httpClient'
 
 interface AuthContextValue {
   usuario: Usuario | null
@@ -17,24 +18,21 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 // Ponto único de injeção do serviço de autenticação: troque aqui quando
 // existir um backend real, sem tocar em nenhuma tela.
-const authService = mockAuthService
+const authService = httpAuthService
 
-function registrarSessao(usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
-  criarRepositorioLocal(usuario.id).registrar(
-    criarEvento(
-      { id: usuario.id, nome: usuario.nome },
-      {
-        scenario: null,
-        category: 'sessao',
-        entity: 'sessao',
-        field: null,
-        previousValue: null,
-        newValue: null,
-        action,
-        summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
-      },
-    ),
-  )
+function registrarSessao(_usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
+  criarRepositorioHttpAuditoria()
+    .registrar({
+      scenario: null,
+      category: 'sessao',
+      entity: 'sessao',
+      field: null,
+      previousValue: null,
+      newValue: null,
+      action,
+      summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
+    })
+    .catch(() => {})
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -42,10 +40,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [carregando, setCarregando] = useState(true)
 
   useEffect(() => {
-    authService.sessaoAtual().then((s) => {
+    let cancelado = false
+    async function restaurarSessao() {
+      let s = await authService.sessaoAtual()
+      if (s) {
+        // A sessão gravada pode ter token expirado ou inválido: valida uma
+        // vez no servidor antes de liberar as rotas. Só 401 descarta a
+        // sessão; falha de rede mantém, para não deslogar por instabilidade.
+        try {
+          await apiFetch('/auth/me')
+        } catch (erro) {
+          if (erro instanceof ErroAutenticacao) {
+            await authService.logout()
+            s = null
+          }
+        }
+      }
+      if (cancelado) return
       setSessao(s)
       setCarregando(false)
-    })
+    }
+    restaurarSessao()
+    return () => {
+      cancelado = true
+    }
   }, [])
 
   // Logout (ou login) feito em outra aba reflete aqui também.

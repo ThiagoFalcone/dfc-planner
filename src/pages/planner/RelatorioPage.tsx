@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
-import { criarRepositorioProjetos } from '@/services/planner/plannerRepository'
+import { criarRepositorioHttpProjetos } from '@/services/planner/httpPlannerRepository'
 import { computar } from '@/domain/scenario/computar'
-import { nomeCurto, rotuloFonte } from '@/domain/scenario/types'
+import { type EstadoPlanner, nomeCurto, rotuloFonte } from '@/domain/scenario/types'
 import { gerarInsights } from '@/lib/insights'
 import { analisarDescontado, formatarPercentual, lerTMA } from '@/lib/financeiro'
 import { formatarDataHora, formatarMoedaCurta, rotuloMes } from '@/lib/formato'
@@ -33,31 +33,58 @@ export function RelatorioPage() {
   const cenarioId = params.get('cenario')
   const autoImprimir = params.get('imprimir') === '1'
 
-  const dados = useMemo(() => {
-    if (!usuario || !projetoId) return null
-    const estado = criarRepositorioProjetos(usuario.id).carregar(projetoId)
-    if (!estado) return null
-    const editavel = estado.cenarios.find((c) => c.id === cenarioId) ?? estado.cenarios[0]
-    const computado = computar(editavel)
-    const outros = estado.cenarios
-      .filter((c) => c.id !== editavel.id)
-      .map((c) => computar(c))
-      .filter((c) => c.indicadores)
-    return { estado, computado, outros }
-  }, [usuario, projetoId, cenarioId])
+  const repo = useMemo(() => criarRepositorioHttpProjetos(), [])
+  const [estado, setEstado] = useState<EstadoPlanner | null>(null)
+  const [carregando, setCarregando] = useState(() => Boolean(usuario) && Boolean(projetoId))
 
   useEffect(() => {
-    if (autoImprimir && dados?.computado.indicadores) {
+    if (!usuario || !projetoId) return
+    let cancelado = false
+    repo
+      .carregar(projetoId)
+      .then((estadoCarregado) => {
+        if (cancelado) return
+        setEstado(estadoCarregado)
+        setCarregando(false)
+      })
+      .catch(() => {
+        // Cai na mensagem de "não encontrado" em vez de carregar para sempre.
+        if (!cancelado) setCarregando(false)
+      })
+    return () => {
+      cancelado = true
+    }
+  }, [repo, usuario, projetoId])
+
+  const computado = useMemo(() => {
+    if (!estado) return null
+    const editavel = estado.cenarios.find((c) => c.id === cenarioId) ?? estado.cenarios[0]
+    return computar(editavel)
+  }, [estado, cenarioId])
+
+  const outros = useMemo(() => {
+    if (!estado || !computado) return []
+    return estado.cenarios
+      .filter((c) => c.id !== computado.editavel.id)
+      .map((c) => computar(c))
+      .filter((c) => c.indicadores)
+  }, [estado, computado])
+
+  useEffect(() => {
+    if (autoImprimir && !carregando && computado?.indicadores) {
       const id = window.setTimeout(() => window.print(), 400)
       return () => window.clearTimeout(id)
     }
-  }, [autoImprimir, dados])
+  }, [autoImprimir, carregando, computado])
 
-  if (!dados) {
+  if (carregando) {
+    return <p className="p-8 text-sm text-fg-2">Carregando…</p>
+  }
+
+  if (!estado || !computado) {
     return <p className="p-8 text-sm text-fg-2">Planejamento não encontrado. Feche esta aba e exporte novamente a partir de Resultados.</p>
   }
 
-  const { estado, computado, outros } = dados
   const { editavel, resultados, indicadores, periodosNumericos } = computado
   const nome = nomeCurto(editavel.nome)
 
