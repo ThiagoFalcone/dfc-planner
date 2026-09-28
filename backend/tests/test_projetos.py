@@ -152,6 +152,16 @@ def test_excluir_projeto_ativo_reatribui_ou_limpa_projeto_ativo(client, db):
     assert resposta.json() == {"projetoId": None}
 
 
+def test_excluir_projeto_ativo_reatribui_para_outro_projeto_restante(client, db):
+    usuario = _criar_usuario(db)
+    client.post("/projetos", json=_estado_exemplo("prj_1", "cen_1"), headers=_token_de(usuario))
+    client.post("/projetos", json=_estado_exemplo("prj_2", "cen_2"), headers=_token_de(usuario))
+    client.put("/projetos/ativo", json={"projetoId": "prj_1"}, headers=_token_de(usuario))
+    client.delete("/projetos/prj_1", headers=_token_de(usuario))
+    resposta = client.get("/projetos/ativo", headers=_token_de(usuario))
+    assert resposta.json() == {"projetoId": "prj_2"}
+
+
 def test_fonte_de_proveniencia_fora_dos_valores_permitidos_e_rejeitada(client, db):
     usuario = _criar_usuario(db)
     estado = _estado_exemplo()
