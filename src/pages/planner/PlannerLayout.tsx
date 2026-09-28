@@ -106,7 +106,10 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
   const [erroCarregamento, setErroCarregamento] = useState(false)
 
   const recarregar = useCallback(() => {
-    repo.listar().then(setLista).catch(() => setErroCarregamento(true))
+    // Falha só no refresh da lista (após salvar/criar/etc.) não derruba o
+    // workspace: mantém a lista anterior. erroCarregamento fica reservado
+    // para a carga inicial, quando ainda não há nada para mostrar.
+    repo.listar().then(setLista).catch(() => {})
   }, [repo])
 
   // Primeiro acesso: nasce um planejamento com o exemplo do enunciado.
@@ -222,7 +225,19 @@ function GestorProjetos({ ator }: { ator: AuditActor }) {
       const e = await repo.carregar(id)
       if (!e) return
       const agora = new Date().toISOString()
-      const copia: EstadoPlanner = { ...e, id: gerarId('prj'), nomeProjeto: `Cópia de ${e.nomeProjeto}`, criadoEm: agora, atualizadoEm: agora }
+      // Ids de cenário são chave primária no servidor: a cópia precisa de ids
+      // novos, nunca os do planejamento de origem (que continuam existindo).
+      const novosIds = new Map(e.cenarios.map((c) => [c.id, gerarId('cen')]))
+      const cenarios = e.cenarios.map((c) => ({ ...c, id: novosIds.get(c.id)! }))
+      const copia: EstadoPlanner = {
+        ...e,
+        id: gerarId('prj'),
+        nomeProjeto: `Cópia de ${e.nomeProjeto}`,
+        criadoEm: agora,
+        atualizadoEm: agora,
+        cenarios,
+        cenarioAtivoId: novosIds.get(e.cenarioAtivoId) ?? cenarios[0]?.id ?? '',
+      }
       await repo.salvar(copia)
       registrar(eventoProjeto({ id: copia.id, nome: copia.nomeProjeto }, { field: null, previousValue: null, newValue: `Cópia de ${e.nomeProjeto}`, action: 'CREATE', summary: 'Planejamento duplicado' }))
       recarregar()

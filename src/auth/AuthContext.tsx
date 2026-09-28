@@ -3,6 +3,7 @@ import { httpAuthService } from './httpAuthService'
 import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
 import { criarRepositorioHttpAuditoria } from '@/services/audit/httpAuditRepository'
 import { CHAVES } from '@/services/storage/localStore'
+import { apiFetch, ErroAutenticacao } from '@/lib/httpClient'
 
 interface AuthContextValue {
   usuario: Usuario | null
@@ -39,10 +40,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [carregando, setCarregando] = useState(true)
 
   useEffect(() => {
-    authService.sessaoAtual().then((s) => {
+    let cancelado = false
+    async function restaurarSessao() {
+      let s = await authService.sessaoAtual()
+      if (s) {
+        // A sessão gravada pode ter token expirado ou inválido: valida uma
+        // vez no servidor antes de liberar as rotas. Só 401 descarta a
+        // sessão; falha de rede mantém, para não deslogar por instabilidade.
+        try {
+          await apiFetch('/auth/me')
+        } catch (erro) {
+          if (erro instanceof ErroAutenticacao) {
+            await authService.logout()
+            s = null
+          }
+        }
+      }
+      if (cancelado) return
       setSessao(s)
       setCarregando(false)
-    })
+    }
+    restaurarSessao()
+    return () => {
+      cancelado = true
+    }
   }, [])
 
   // Logout (ou login) feito em outra aba reflete aqui também.
