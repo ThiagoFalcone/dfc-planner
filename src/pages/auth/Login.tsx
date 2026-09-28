@@ -100,7 +100,7 @@ export function LoginPage() {
         aberto={ajudaSenha}
         onFechar={() => setAjudaSenha(false)}
         titulo="Recuperação de senha"
-        descricao="Recuperar senha depende de um servidor que envie o link por e-mail, e esta versão demonstrativa não tem um. Crie uma nova conta neste navegador."
+        descricao="Recuperar senha depende de um servidor que envie o link por e-mail, e esta versão demonstrativa não tem um. Crie uma nova conta."
         rodape={
           <Button size="sm" variant="primary" onClick={() => setAjudaSenha(false)}>
             Entendi

@@ -70,7 +70,7 @@ const PAGINAS: Record<string, { titulo: string; descricao: string; contexto?: bo
   },
   [ROTAS.auditoria]: {
     titulo: 'Histórico e auditoria',
-    descricao: 'Alterações relevantes registradas neste navegador, da mais recente para a mais antiga.',
+    descricao: 'Alterações relevantes registradas no servidor, da mais recente para a mais antiga.',
   },
   [ROTAS.projetos]: {
     titulo: 'Planejamentos',

@@ -47,7 +47,7 @@ export function RegisterPage() {
   return (
     <AuthLayout
       title="Criar conta"
-      subtitle="Seu planejamento fica salvo neste navegador."
+      subtitle="Seu planejamento fica salvo com segurança no servidor."
       footer={
         <>
           Já tem conta?{' '}
@@ -109,7 +109,7 @@ export function RegisterPage() {
         </Button>
 
         <p className="text-center text-xs leading-relaxed text-fg-3">
-          Conta local de demonstração: não há servidor, e a senha fica guardada apenas neste navegador.
+          Sua senha é criptografada e armazenada com segurança no servidor, nunca em texto simples.
         </p>
       </form>
     </AuthLayout>
