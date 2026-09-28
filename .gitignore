@@ -16,3 +16,7 @@ coverage
 
 # worktrees de desenvolvimento isolado
 .worktrees
+
+# planos e specs de implementação: uso interno, não vão para o GitHub
+docs/superpowers/plans/
+docs/superpowers/specs/
