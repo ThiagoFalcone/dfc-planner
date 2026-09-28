@@ -14,5 +14,10 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    // .worktrees/ fica dentro do repo (ver .gitignore) — sem isso, rodar
+    // `npm run test` na raiz também executa os testes de qualquer worktree
+    // ativo, com um node_modules próprio, duplicando o React e quebrando
+    // a suíte.
+    exclude: ['**/node_modules/**', '**/dist/**', '**/.{idea,git,cache,output,temp}/**', '.worktrees/**'],
   },
 })
