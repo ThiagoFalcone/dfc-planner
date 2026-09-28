@@ -40,11 +40,17 @@ export function RelatorioPage() {
   useEffect(() => {
     if (!usuario || !projetoId) return
     let cancelado = false
-    repo.carregar(projetoId).then((estadoCarregado) => {
-      if (cancelado) return
-      setEstado(estadoCarregado)
-      setCarregando(false)
-    })
+    repo
+      .carregar(projetoId)
+      .then((estadoCarregado) => {
+        if (cancelado) return
+        setEstado(estadoCarregado)
+        setCarregando(false)
+      })
+      .catch(() => {
+        // Cai na mensagem de "não encontrado" em vez de carregar para sempre.
+        if (!cancelado) setCarregando(false)
+      })
     return () => {
       cancelado = true
     }

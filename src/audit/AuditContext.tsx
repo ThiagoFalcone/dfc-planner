@@ -47,17 +47,23 @@ export function AuditProvider({ ator, children }: { ator: AuditActor; children: 
 
   const limpar = useCallback(() => {
     setEventos([])
-    repositorio.limpar().catch(() => {})
-    registrar({
-      scenario: null,
-      category: 'sessao',
-      entity: 'historico',
-      field: null,
-      previousValue: null,
-      newValue: null,
-      action: 'CLEAR',
-      summary: 'Histórico apagado',
-    })
+    // O evento CLEAR só é enviado depois que o DELETE terminar: se os dois
+    // corressem em paralelo, o DELETE poderia apagar o próprio CLEAR.
+    repositorio
+      .limpar()
+      .then(() =>
+        registrar({
+          scenario: null,
+          category: 'sessao',
+          entity: 'historico',
+          field: null,
+          previousValue: null,
+          newValue: null,
+          action: 'CLEAR',
+          summary: 'Histórico apagado',
+        }),
+      )
+      .catch(() => {})
   }, [repositorio, registrar])
 
   const value = useMemo(() => ({ eventos, registrar, limpar }), [eventos, registrar, limpar])
