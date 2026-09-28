@@ -13,12 +13,13 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/registrar", response_model=RespostaAuth, response_model_by_alias=True, status_code=status.HTTP_201_CREATED)
 def registrar(dados: RegistrarRequest, db: Session = Depends(get_db)) -> RespostaAuth:
-    existe = db.scalar(select(Usuario).where(Usuario.email == dados.email))
+    email = dados.email.strip().lower()
+    existe = db.scalar(select(Usuario).where(Usuario.email == email))
     if existe is not None:
         raise HTTPException(status.HTTP_409_CONFLICT, "Já existe uma conta com este e-mail.")
     usuario = Usuario(
         nome=dados.nome,
-        email=dados.email,
+        email=email,
         senha_hash=hash_senha(dados.senha),
         empresa=dados.empresa,
         criado_em=agora_iso(),
@@ -31,7 +32,8 @@ def registrar(dados: RegistrarRequest, db: Session = Depends(get_db)) -> Respost
 
 @router.post("/login", response_model=RespostaAuth, response_model_by_alias=True)
 def login(credenciais: LoginRequest, db: Session = Depends(get_db)) -> RespostaAuth:
-    usuario = db.scalar(select(Usuario).where(Usuario.email == credenciais.email))
+    email = credenciais.email.strip().lower()
+    usuario = db.scalar(select(Usuario).where(Usuario.email == email))
     if usuario is None or not verificar_senha(credenciais.senha, usuario.senha_hash):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "E-mail ou senha inválidos.")
     return RespostaAuth(usuario=UsuarioResponse.model_validate(usuario), token=gerar_token(usuario.id))

@@ -24,6 +24,20 @@ def test_login_com_credenciais_corretas(client):
     assert "token" in resposta.json()
 
 
+def test_email_e_normalizado_para_minusculas_e_sem_espacos(client):
+    registro = client.post(
+        "/auth/registrar", json={"nome": "Ana", "email": "  Ana@X.com ", "senha": "segredo123"}
+    )
+    assert registro.status_code == 201
+    assert registro.json()["usuario"]["email"] == "ana@x.com"
+    resposta = client.post("/auth/login", json={"email": "AnA@x.CoM", "senha": "segredo123"})
+    assert resposta.status_code == 200
+    duplicado = client.post(
+        "/auth/registrar", json={"nome": "Ana", "email": "ana@x.com", "senha": "segredo123"}
+    )
+    assert duplicado.status_code == 409
+
+
 def test_login_com_senha_errada_retorna_401(client):
     client.post("/auth/registrar", json={"nome": "Ana", "email": "ana@exemplo.com", "senha": "segredo123"})
     resposta = client.post("/auth/login", json={"email": "ana@exemplo.com", "senha": "errada"})
