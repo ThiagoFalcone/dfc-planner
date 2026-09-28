@@ -4,6 +4,50 @@ from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
 
+# Valores permitidos: espelham exatamente as uniões TypeScript do front-end
+# (FonteDados em src/domain/scenario/types.ts; AuditCategory, AuditEntity e
+# AuditAction em src/domain/audit/types.ts). Mudou lá, muda aqui.
+FonteDados = Literal["simulacao", "material-disciplina", "estimativa", "documento", "outro"]
+
+AuditCategory = Literal["planejamento", "cenarios", "premissas", "estrutura", "sessao", "exportacao"]
+
+AuditEntity = Literal[
+    "receitas",
+    "despesas",
+    "investimentos",
+    "tributos",
+    "residual",
+    "mes",
+    "cenario",
+    "premissas",
+    "proveniencia",
+    "projeto",
+    "sessao",
+    "arquivo",
+    "historico",
+    "tma",
+]
+
+AuditAction = Literal[
+    "CREATE",
+    "EDIT",
+    "ADD",
+    "REMOVE",
+    "RESET",
+    "LOAD_EXAMPLE",
+    "SWITCH",
+    "EXPORT",
+    "LOGIN",
+    "LOGOUT",
+    "CLEAR",
+    "UNDO",
+    "REDO",
+    "IMPORT",
+    "DELETE",
+    "PASTE",
+]
+
+
 class CamelModel(BaseModel):
     """Base para todo schema exposto na API: serializa/aceita camelCase no
     JSON (compatível com os tipos TypeScript do front-end), mantendo
@@ -46,7 +90,7 @@ class PeriodoSchema(CamelModel):
 
 
 class ProvenienciaSchema(CamelModel):
-    fonte: str
+    fonte: FonteDados
     referencia: str
     responsavel: str
     atualizado_em: str
@@ -85,21 +129,21 @@ class AtivoSchema(CamelModel):
     projeto_id: str | None
 
 
-class NovoEventoRequest(CamelModel):
-    project: dict | None = None
-    scenario: dict | None = None
-    category: str
-    entity: str
-    field: str | None = None
-    previous_value: str | None = None
-    new_value: str | None = None
-    action: str
-    summary: str
-
-
 class ProjetoRefSchema(CamelModel):
     id: str
     nome: str
+
+
+class NovoEventoRequest(CamelModel):
+    project: ProjetoRefSchema | None = None
+    scenario: ProjetoRefSchema | None = None
+    category: AuditCategory
+    entity: AuditEntity
+    field: str | None = None
+    previous_value: str | None = None
+    new_value: str | None = None
+    action: AuditAction
+    summary: str
 
 
 class EventoResponse(CamelModel):
@@ -108,10 +152,10 @@ class EventoResponse(CamelModel):
     user: dict
     project: ProjetoRefSchema | None = None
     scenario: ProjetoRefSchema | None = None
-    category: str
-    entity: str
+    category: AuditCategory
+    entity: AuditEntity
     field: str | None
     previous_value: str | None
     new_value: str | None
-    action: str
+    action: AuditAction
     summary: str

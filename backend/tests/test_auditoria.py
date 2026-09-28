@@ -59,3 +59,36 @@ def test_limpar_remove_todos_os_eventos_do_usuario(client, db):
     resposta = client.delete("/auditoria", headers=_token_de(usuario))
     assert resposta.status_code == 204
     assert client.get("/auditoria", headers=_token_de(usuario)).json() == []
+
+
+def _evento_valido(**extra) -> dict:
+    return {
+        "category": "sessao", "entity": "sessao", "field": None, "previousValue": None,
+        "newValue": None, "action": "LOGIN", "summary": "Sessão iniciada", **extra,
+    }
+
+
+def test_category_entity_ou_action_fora_dos_valores_permitidos_sao_rejeitados(client, db):
+    usuario = _criar_usuario(db)
+    for campo, valor in [("category", "inventada"), ("entity", "inventada"), ("action", "HACK")]:
+        resposta = client.post("/auditoria", json=_evento_valido(**{campo: valor}), headers=_token_de(usuario))
+        assert resposta.status_code == 422, campo
+    assert client.get("/auditoria", headers=_token_de(usuario)).json() == []
+
+
+def test_project_sem_id_ou_nome_e_rejeitado_com_422_e_nao_500(client, db):
+    usuario = _criar_usuario(db)
+    resposta = client.post("/auditoria", json=_evento_valido(project={"id": "prj_1"}), headers=_token_de(usuario))
+    assert resposta.status_code == 422
+
+
+def test_project_e_scenario_validos_sao_gravados_e_devolvidos(client, db):
+    usuario = _criar_usuario(db)
+    corpo = _evento_valido(
+        category="planejamento", entity="receitas", action="EDIT",
+        project={"id": "prj_1", "nome": "Projeto"}, scenario={"id": "cen_1", "nome": "Base"},
+    )
+    resposta = client.post("/auditoria", json=corpo, headers=_token_de(usuario))
+    assert resposta.status_code == 201
+    assert resposta.json()["project"] == {"id": "prj_1", "nome": "Projeto"}
+    assert resposta.json()["scenario"] == {"id": "cen_1", "nome": "Base"}

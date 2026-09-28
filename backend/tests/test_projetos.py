@@ -150,3 +150,18 @@ def test_excluir_projeto_ativo_reatribui_ou_limpa_projeto_ativo(client, db):
     client.delete("/projetos/prj_1", headers=_token_de(usuario))
     resposta = client.get("/projetos/ativo", headers=_token_de(usuario))
     assert resposta.json() == {"projetoId": None}
+
+
+def test_fonte_de_proveniencia_fora_dos_valores_permitidos_e_rejeitada(client, db):
+    usuario = _criar_usuario(db)
+    estado = _estado_exemplo()
+    estado["cenarios"][0]["proveniencia"]["fonte"] = "inventada"
+    resposta = client.post("/projetos", json=estado, headers=_token_de(usuario))
+    assert resposta.status_code == 422
+
+
+def test_id_de_cenario_ja_existente_em_outro_projeto_vira_409_e_nao_500(client, db):
+    usuario = _criar_usuario(db)
+    client.post("/projetos", json=_estado_exemplo("prj_1", "cen_1"), headers=_token_de(usuario))
+    resposta = client.post("/projetos", json=_estado_exemplo("prj_2", "cen_1"), headers=_token_de(usuario))
+    assert resposta.status_code == 409
