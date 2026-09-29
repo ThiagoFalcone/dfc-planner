@@ -5,7 +5,7 @@ de aplicações de apoio à decisão com agentes de IA": um workspace de planeja
 fluxo de caixa que ajuda a decidir **quanto capital é necessário** para lançar um
 projeto e **quando o investimento se recupera**.
 
-**Equipe:** _(preencher nomes)_ · **Turma:** _(preencher)_
+**Equipe:** Thiago Matheus Pinheiro, João Vítor Mamede, Gabriel Viana Nunes · **Turma:** Engenharia de Software, 8º período
 **Tecnologia:** React 19 + TypeScript + Vite, Tailwind CSS v4, Recharts, Vitest.
 
 ## O que a aplicação faz

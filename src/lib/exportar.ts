@@ -97,7 +97,7 @@ export function exportarHistoricoJSON(eventos: unknown[]): string {
   baixarArquivo(
     JSON.stringify(
       {
-        aviso: 'Histórico local do navegador. Não é uma trilha de auditoria inviolável.',
+        aviso: 'Trilha de auditoria registrada no servidor, com identidade e carimbo de tempo definidos pela API — não editável pelo navegador.',
         exportadoEm: new Date().toISOString(),
         eventos,
       },
