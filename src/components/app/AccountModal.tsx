@@ -123,13 +123,6 @@ export function AccountModal({
               </Linha>
               <Linha rotulo="Autenticação">Token JWT (servidor)</Linha>
             </dl>
-            <div className="mt-3 flex gap-2.5 rounded-xl bg-warning-soft px-3.5 py-3 text-xs leading-relaxed text-fg-2">
-              <Icon nome="info" className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-              <p>
-                Esta é uma conta real: a sessão é autenticada por token JWT e os dados ficam salvos no banco de
-                dados do servidor, não no navegador. Ainda não há recuperação de senha por e-mail.
-              </p>
-            </div>
             <Button variant="secondary" size="sm" className="mt-4" onClick={onSair}>
               <Icon nome="sair" className="h-4 w-4" />
               Sair desta sessão
