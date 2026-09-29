@@ -120,6 +120,32 @@ describe('caso "saldo zero antes do primeiro desembolso não representa recupera
   })
 })
 
+describe('reincide negativo após recuperar', () => {
+  it('marca reincideNegativoAposRecuperacao quando o acumulado volta a ficar negativo depois da recuperação', () => {
+    const periodos: Periodo[] = [
+      { mes: 0, receitas: 0, despesas: 5000, investimentos: 0, tributos: 0, residual: 0 }, // acumulado -5000 (déficit)
+      { mes: 1, receitas: 5000, despesas: 0, investimentos: 0, tributos: 0, residual: 0 }, // acumulado 0 → recuperação
+      { mes: 2, receitas: 0, despesas: 3000, investimentos: 0, tributos: 0, residual: 0 }, // acumulado -3000 → reincide
+    ]
+    const resultados = calcularResultados(periodos)
+    const { mesRecuperacao, reincideNegativoAposRecuperacao } = encontrarRecuperacao(resultados)
+    expect(mesRecuperacao).toBe(1)
+    expect(reincideNegativoAposRecuperacao).toBe(true)
+  })
+
+  it('não marca reincidência quando o acumulado permanece não-negativo após a recuperação', () => {
+    const periodos: Periodo[] = [
+      { mes: 0, receitas: 0, despesas: 5000, investimentos: 0, tributos: 0, residual: 0 }, // acumulado -5000 (déficit)
+      { mes: 1, receitas: 5000, despesas: 0, investimentos: 0, tributos: 0, residual: 0 }, // acumulado 0 → recuperação
+      { mes: 2, receitas: 1000, despesas: 0, investimentos: 0, tributos: 0, residual: 0 }, // acumulado 1000
+    ]
+    const resultados = calcularResultados(periodos)
+    const { mesRecuperacao, reincideNegativoAposRecuperacao } = encontrarRecuperacao(resultados)
+    expect(mesRecuperacao).toBe(1)
+    expect(reincideNegativoAposRecuperacao).toBe(false)
+  })
+})
+
 describe('entradas inválidas não podem quebrar o programa', () => {
   it('sinaliza campo vazio (NaN) sem calcular silenciosamente como zero', () => {
     const problemas = validarPeriodos([
