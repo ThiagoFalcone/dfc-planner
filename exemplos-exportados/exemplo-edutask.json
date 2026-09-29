@@ -1,0 +1,123 @@
+{
+  "moeda": "BRL",
+  "unidadeTempo": "mes",
+  "geradoEm": "2026-09-29T17:23:58.302Z",
+  "projeto": "Projeto EduTask (exemplo de referência)",
+  "cenario": {
+    "id": "exemplo-edutask",
+    "nome": "Exemplo EduTask (referência do enunciado)",
+    "premissas": "Dados de teste fornecidos pela disciplina. Tributos = 0 em todos os meses. Residual de R$ 5.000 no mês 6, mantido como premissa do material de aula (sem devolução automática superior ao giro investido).",
+    "proveniencia": {
+      "fonte": "material-disciplina",
+      "referencia": "Enunciado da atividade, dados do EduTask",
+      "responsavel": "Equipe DFC Planner",
+      "atualizadoEm": "2026-09-23T12:00:00.000Z",
+      "fonteRotulo": "Material da disciplina"
+    },
+    "periodos": [
+      {
+        "mes": 0,
+        "receitas": 0,
+        "despesas": 0,
+        "investimentos": 6000,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 1,
+        "receitas": 0,
+        "despesas": 8000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 2,
+        "receitas": 0,
+        "despesas": 8000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 3,
+        "receitas": 0,
+        "despesas": 6000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 4,
+        "receitas": 12000,
+        "despesas": 6000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 5,
+        "receitas": 18000,
+        "despesas": 7000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 0
+      },
+      {
+        "mes": 6,
+        "receitas": 22000,
+        "despesas": 8000,
+        "investimentos": 0,
+        "tributos": 0,
+        "residual": 5000
+      }
+    ]
+  },
+  "resultados": [
+    {
+      "mes": 0,
+      "fluxo": -6000,
+      "acumulado": -6000
+    },
+    {
+      "mes": 1,
+      "fluxo": -8000,
+      "acumulado": -14000
+    },
+    {
+      "mes": 2,
+      "fluxo": -8000,
+      "acumulado": -22000
+    },
+    {
+      "mes": 3,
+      "fluxo": -6000,
+      "acumulado": -28000
+    },
+    {
+      "mes": 4,
+      "fluxo": 6000,
+      "acumulado": -22000
+    },
+    {
+      "mes": 5,
+      "fluxo": 11000,
+      "acumulado": -11000
+    },
+    {
+      "mes": 6,
+      "fluxo": 19000,
+      "acumulado": 8000
+    }
+  ],
+  "indicadores": {
+    "houveDeficit": true,
+    "maiorDeficit": 28000,
+    "mesMaiorDeficit": 3,
+    "necessidadeCapital": 28000,
+    "mesRecuperacao": 6,
+    "saldoFinal": 8000,
+    "reincideNegativoAposRecuperacao": false
+  },
+  "analiseDescontadaComplementar": null
+}

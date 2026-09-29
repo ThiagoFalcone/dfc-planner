@@ -140,12 +140,13 @@ Fórmulas completas, convenções de sinal e casos de borda: `modelo_calculos.md
 npm run test
 ```
 
-84 testes automatizados (Vitest) no frontend, cobrindo:
+90 testes automatizados (Vitest) no frontend, cobrindo:
 
-- `src/lib/calculos.test.ts` (15 testes, núcleo obrigatório da Opção 3): fórmula do
+- `src/lib/calculos.test.ts` (17 testes, núcleo obrigatório da Opção 3): fórmula do
   fluxo, o caso de referência completo do EduTask, cenário sem recuperação, alteração
   isolada de uma premissa, a regra "saldo zero antes do primeiro desembolso não é
-  recuperação", entradas inválidas e ausência total de déficit.
+  recuperação", o caso "saldo volta a ficar negativo depois de recuperar", entradas
+  inválidas e ausência total de déficit.
 - `src/lib/financeiro.test.ts`, `src/lib/simulacao.test.ts`, `src/lib/importar.test.ts`,
   `src/lib/formato.test.ts`: as bibliotecas complementares (VPL/TIR, simulador "e se",
   importação de arquivos, formatação).
@@ -156,12 +157,17 @@ npm run test
 - `src/App.test.tsx`: fluxo de ponta a ponta (login, edição de célula, cálculo,
   auditoria, logout, persistência entre sessões).
 
-Todos os 84 testes do frontend passam (`npx vitest run`). O backend tem sua própria
+Todos os 90 testes do frontend passam (`npx vitest run`). O backend tem sua própria
 suíte, com 30 testes automatizados (Pytest — health, security, deps, auth, schemas,
 projetos, auditoria, models), rodada com `pytest -v` a partir de `backend/`; todos
 passam. O caso do EduTask também foi conferido manualmente, linha a linha, em
 `modelo_calculos.md`: essa é a conferência independente do agente de IA exigida no
 Passo 3 da atividade.
+
+Evidência de teste no formato entrada/resultado esperado/resultado obtido/situação,
+exigido pela atividade: `evidencias_teste.md`. Exemplo de arquivo exportado pela
+aplicação (CSV e JSON, gerados de verdade, não escritos à mão): pasta
+`exemplos-exportados/`.
 
 ## Estrutura do projeto
 
@@ -192,6 +198,8 @@ requisitos.md          Requisitos numerados com critério de aceitação
 modelo_calculos.md     Variáveis, unidades, fórmulas, convenções, caso conferido à mão
 registro_ia.md         Interações com o agente de IA usado no desenvolvimento
 relatorio_decisao.md   Modelo do relatório de decisão (até 2 páginas)
+evidencias_teste.md    Evidências de teste: entrada, esperado, obtido e situação
+exemplos-exportados/   CSV e JSON de exemplo, gerados pela própria aplicação
 
 backend/
   app/routers/     Rotas da API: auth, projetos, auditoria
