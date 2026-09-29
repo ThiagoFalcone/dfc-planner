@@ -42,6 +42,46 @@ mão, linha a linha, sem depender do código: ver `modelo_calculos.md`, seção
 "Caso conferido manualmente (independente do agente de IA)". Essa é a
 verificação exigida no Passo 3 da atividade.
 
+## Segunda conferência independente — cenário próprio, digitado na interface real
+
+Diferente da conferência acima (que só usa as funções puras), esta exercita
+a aplicação de ponta a ponta pelo navegador (extensão Claude em Chrome):
+criado um planejamento novo ("Conferência independente (segundo cenário,
+tributos != 0)"), os valores abaixo foram **calculados à mão primeiro**,
+depois digitados célula a célula na planilha da UI, sem consultar
+`calculos.ts`. Cenário fictício com tributos ≠ 0 em todos os meses (o
+EduTask nunca exercita esse termo da fórmula) e residual só no mês 6.
+
+| Mês | Receitas | Despesas | Invest. | Tributos | Residual | Fluxo (à mão) | Acumulado (à mão) |
+|---|---|---|---|---|---|---|---|
+| 0 | 0 | 0 | 10.000 | 0 | 0 | −10.000 | −10.000 |
+| 1 | 0 | 4.000 | 0 | 0 | 0 | −4.000 | −14.000 |
+| 2 | 4.000 | 4.000 | 0 | 400 | 0 | −400 | −14.400 |
+| 3 | 9.000 | 4.500 | 0 | 900 | 0 | 3.600 | −10.800 |
+| 4 | 12.000 | 4.500 | 0 | 1.200 | 0 | 6.300 | −4.500 |
+| 5 | 14.000 | 5.000 | 0 | 1.400 | 0 | 7.600 | 3.100 |
+| 6 | 15.000 | 5.000 | 0 | 1.500 | 2.000 | 10.500 | 13.600 |
+
+Resultado calculado à mão, **antes** de abrir a aplicação: maior déficit
+R$ 14.400 (mês 2); necessidade de capital R$ 14.400; recuperação no mês 5
+(primeiro acumulado ≥ 0 depois do déficit); saldo final R$ 13.600; sem
+reincidência de saldo negativo depois da recuperação.
+
+| Indicador | Calculado à mão | Obtido na aplicação (UI real) | Situação |
+|---|---|---|---|
+| Fluxo e acumulado por mês | ver tabela acima | idênticos, linha a linha (conferido via leitura da grade) | ✅ Aprovado |
+| Maior déficit | R$ 14.400 (mês 2) | R$ 14.400 (Mês 2) | ✅ Aprovado |
+| Capital necessário | R$ 14.400 | R$ 14.400 | ✅ Aprovado |
+| Recuperação | Mês 5 | Mês 5 | ✅ Aprovado |
+| Saldo final | R$ 13.600 | R$ 13.600 | ✅ Aprovado |
+
+Todos os indicadores batem exatamente. Essa é a segunda conferência
+independente exigida (além da automatizada e da conferência do caso de
+referência), agora exercitando a interface real, não só o núcleo de
+cálculo isolado. O planejamento fica salvo em "Conferência independente
+(segundo cenário, tributos != 0)" na lista de planejamentos, com a
+premissa registrada no próprio cenário.
+
 ## Arquivo exportado pela aplicação (evidência)
 
 `exemplos-exportados/exemplo-edutask.csv` e
@@ -50,10 +90,3 @@ verificação exigida no Passo 3 da atividade.
 referência do EduTask, não escritos à mão. Contêm entradas (períodos),
 premissas (descrição + proveniência) e saídas (resultados + indicadores),
 conforme exigido.
-
-## Pendente (fora do escopo desta suíte automatizada)
-
-Conforme já registrado em `registro_ia.md` e no README, falta à equipe:
-resolver um segundo cenário próprio à mão (diferente do EduTask) e comparar
-com o resultado da aplicação — essa é a segunda conferência independente,
-exigida além da automatizada e da conferência do caso de referência já feita.

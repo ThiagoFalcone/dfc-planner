@@ -196,16 +196,42 @@ próprio, organizado com o fluxo `main` / `develop` / `feature/*` (gitflow).
 
 ---
 
+### 8. 2026-09-29: Segunda conferência independente, digitada na interface real
+
+**Integrante responsável por esta interação:** João Vítor Mamede (sessão separada das
+interações 1–7 acima, que foram conduzidas por Thiago Matheus).
+
+**Objetivo:** cumprir a segunda conferência independente exigida no Passo 3 (a
+primeira, do caso EduTask, já estava em `modelo_calculos.md`): um cenário próprio,
+diferente do exemplo, calculado à mão e comparado com o resultado da aplicação.
+
+**Ação do agente:** calculou à mão, antes de abrir a aplicação, um cenário fictício
+com tributos ≠ 0 em todos os meses (termo da fórmula que o EduTask nunca exercita,
+já que lá tributos = 0) e residual só no mês 6: maior déficit R$ 14.400 (mês 2),
+recuperação no mês 5, saldo final R$ 13.600. Usou a extensão Claude em Chrome para
+abrir a aplicação de verdade (`localhost:5173`), criar um planejamento novo em
+branco e digitar célula a célula os mesmos valores na planilha da UI — não pela API
+nem pelas funções de teste.
+
+**Verificação realizada:** os quatro indicadores exibidos pela aplicação (capital
+necessário, maior déficit, recuperação, saldo final) e o fluxo/acumulado de cada mês
+na grade bateram exatamente com os valores calculados à mão. Registro completo,
+incluindo a tabela mês a mês e a premissa registrada no cenário, em
+`evidencias_teste.md`, seção "Segunda conferência independente".
+
+**Decisão humana:** aceito.
+
+---
+
 ## O que ainda depende de conferência manual da equipe (não feito pela IA)
 
 Para cumprir integralmente o Passo 3 e o Passo 8 da atividade, a equipe ainda precisa,
 antes da entrega:
 
-1. Resolver **de próprio punho** (calculadora ou planilha, sem abrir esta aplicação)
-   pelo menos um cenário próprio (diferente do exemplo do EduTask) e comparar com o
-   resultado da aplicação; o agente já conferiu o caso do EduTask linha a linha em
-   `modelo_calculos.md`, mas essa segunda conferência independente é da equipe.
-2. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
+1. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
    README**, sem ajuda, e registrar se conseguiu.
-3. Preencher o cabeçalho do relatório de decisão (`relatorio_decisao.md`) com o
+2. Preencher o cabeçalho do relatório de decisão (`relatorio_decisao.md`) com o
    cenário realmente analisado pela equipe para a apresentação.
+
+> A conferência independente de um segundo cenário (item que estava aqui) já foi
+> feita — ver interação #8 abaixo e `evidencias_teste.md`.
