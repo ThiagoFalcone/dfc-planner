@@ -223,5 +223,6 @@ backend/
 
 ## Licença
 
-Distribuído sob a licença MIT (ver `LICENSE`). O código pode ser reutilizado
-livremente; os dados de referência do EduTask pertencem ao enunciado da disciplina.
+Todos os direitos reservados (ver `LICENSE`). Este código foi desenvolvido
+para fins acadêmicos e não é distribuído sob licença de código aberto; os
+dados de referência do EduTask pertencem ao enunciado da disciplina.
