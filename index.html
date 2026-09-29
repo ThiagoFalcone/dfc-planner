@@ -3,18 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>DFC Planner — Planejador de Fluxo de Caixa</title>
+    <title>DFC Planner — Planejamento de fluxo de caixa</title>
     <meta
       name="description"
-      content="Planejador de fluxo de caixa para apoiar decisões de investimento em projetos de software: déficit máximo, necessidade de capital e mês de recuperação."
+      content="Workspace de planejamento de fluxo de caixa: déficit máximo, necessidade de capital, recuperação e comparação de cenários."
     />
+    <script>
+      // Aplica o tema antes da primeira pintura (evita flash). Mesma chave de src/services/storage/localStore.ts.
+      ;(function () {
+        try {
+          var pref = JSON.parse(localStorage.getItem('dfc-planner:tema') || '"system"')
+          var escuro =
+            pref === 'dark' ||
+            (pref !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.setAttribute('data-theme', escuro ? 'dark' : 'light')
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light')
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

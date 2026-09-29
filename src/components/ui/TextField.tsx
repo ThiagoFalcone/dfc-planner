@@ -1,56 +1,53 @@
 import clsx from 'clsx'
-import { type InputHTMLAttributes, forwardRef, useId } from 'react'
+import { type InputHTMLAttributes, type ReactNode, forwardRef, useId } from 'react'
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   error?: string
-  hint?: string
-  prefix?: string
+  hint?: ReactNode
+  labelAction?: ReactNode
 }
 
+export const campoClasses =
+  'h-10 w-full rounded-[10px] border bg-surface px-3 text-sm text-fg outline-none transition-[border-color,box-shadow] duration-120 placeholder:text-fg-3 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-soft)]'
+
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { className, label, error, hint, prefix, id, ...props },
+  { className, label, error, hint, labelAction, id, ...props },
   ref,
 ) {
   const generatedId = useId()
   const inputId = id ?? generatedId
+  const descricao = error ? `${inputId}-erro` : hint ? `${inputId}-dica` : undefined
 
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-ink-700">
-          {label}
-        </label>
+        <div className="flex items-baseline justify-between gap-2">
+          <label htmlFor={inputId} className="text-[13px] font-medium text-fg-2">
+            {label}
+          </label>
+          {labelAction}
+        </div>
       )}
-      <div className="relative flex items-center">
-        {prefix && (
-          <span className="pointer-events-none absolute left-3 text-sm text-ink-400 tabular">
-            {prefix}
-          </span>
+      <input
+        ref={ref}
+        id={inputId}
+        aria-invalid={!!error || undefined}
+        aria-describedby={descricao}
+        className={clsx(
+          campoClasses,
+          error ? 'border-negative focus:border-negative focus:shadow-[0_0_0_3px_var(--negative-soft)]' : 'border-line-strong',
+          className,
         )}
-        <input
-          ref={ref}
-          id={inputId}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
-          className={clsx(
-            'h-10 w-full rounded-xl border bg-white text-sm text-ink-900 outline-none transition-colors',
-            'placeholder:text-ink-300',
-            'focus:border-brand-500 focus:ring-2 focus:ring-brand-100',
-            prefix ? 'pl-9 pr-3' : 'px-3',
-            error ? 'border-negative focus:border-negative focus:ring-red-100' : 'border-ink-200',
-            className,
-          )}
-          {...props}
-        />
-      </div>
+        {...props}
+      />
       {error && (
-        <p id={`${inputId}-error`} className="text-xs font-medium text-negative">
+        <p id={`${inputId}-erro`} className="text-xs font-medium text-negative">
           {error}
         </p>
       )}
       {!error && hint && (
-        <p id={`${inputId}-hint`} className="text-xs text-ink-400">
+        <p id={`${inputId}-dica`} className="text-xs text-fg-3">
           {hint}
         </p>
       )}

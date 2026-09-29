@@ -1,9 +1,13 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { mockAuthService } from './mockAuthService'
-import type { CredenciaisLogin, DadosCadastro, Usuario } from './types'
+import { httpAuthService } from './httpAuthService'
+import type { CredenciaisLogin, DadosCadastro, Sessao, Usuario } from './types'
+import { criarRepositorioHttpAuditoria } from '@/services/audit/httpAuditRepository'
+import { CHAVES } from '@/services/storage/localStore'
+import { apiFetch, ErroAutenticacao } from '@/lib/httpClient'
 
 interface AuthContextValue {
   usuario: Usuario | null
+  sessao: Sessao | null
   carregando: boolean
   entrar(credenciais: CredenciaisLogin): Promise<void>
   cadastrar(dados: DadosCadastro): Promise<void>
@@ -12,39 +16,89 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-// Ponto único de injeção do serviço de autenticação — troque aqui quando
+// Ponto único de injeção do serviço de autenticação: troque aqui quando
 // existir um backend real, sem tocar em nenhuma tela.
-const authService = mockAuthService
+const authService = httpAuthService
+
+function registrarSessao(_usuario: Usuario, action: 'LOGIN' | 'LOGOUT') {
+  criarRepositorioHttpAuditoria()
+    .registrar({
+      scenario: null,
+      category: 'sessao',
+      entity: 'sessao',
+      field: null,
+      previousValue: null,
+      newValue: null,
+      action,
+      summary: action === 'LOGIN' ? 'Sessão iniciada' : 'Sessão encerrada',
+    })
+    .catch(() => {})
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [sessao, setSessao] = useState<Sessao | null>(null)
   const [carregando, setCarregando] = useState(true)
 
   useEffect(() => {
-    authService.sessaoAtual().then((sessao) => {
-      setUsuario(sessao?.usuario ?? null)
+    let cancelado = false
+    async function restaurarSessao() {
+      let s = await authService.sessaoAtual()
+      if (s) {
+        // A sessão gravada pode ter token expirado ou inválido: valida uma
+        // vez no servidor antes de liberar as rotas. Só 401 descarta a
+        // sessão; falha de rede mantém, para não deslogar por instabilidade.
+        try {
+          await apiFetch('/auth/me')
+        } catch (erro) {
+          if (erro instanceof ErroAutenticacao) {
+            await authService.logout()
+            s = null
+          }
+        }
+      }
+      if (cancelado) return
+      setSessao(s)
       setCarregando(false)
-    })
+    }
+    restaurarSessao()
+    return () => {
+      cancelado = true
+    }
+  }, [])
+
+  // Logout (ou login) feito em outra aba reflete aqui também.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === CHAVES.sessao || e.key === null) {
+        authService.sessaoAtual().then(setSessao)
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      usuario,
+      usuario: sessao?.usuario ?? null,
+      sessao,
       carregando,
       async entrar(credenciais) {
-        const sessao = await authService.login(credenciais)
-        setUsuario(sessao.usuario)
+        const nova = await authService.login(credenciais)
+        registrarSessao(nova.usuario, 'LOGIN')
+        setSessao(nova)
       },
       async cadastrar(dados) {
-        const sessao = await authService.registrar(dados)
-        setUsuario(sessao.usuario)
+        const nova = await authService.registrar(dados)
+        registrarSessao(nova.usuario, 'LOGIN')
+        setSessao(nova)
       },
       async sair() {
+        if (sessao) registrarSessao(sessao.usuario, 'LOGOUT')
         await authService.logout()
-        setUsuario(null)
+        setSessao(null)
       },
     }),
-    [usuario, carregando],
+    [sessao, carregando],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,0 +1,161 @@
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
+
+
+# Valores permitidos: espelham exatamente as uniões TypeScript do front-end
+# (FonteDados em src/domain/scenario/types.ts; AuditCategory, AuditEntity e
+# AuditAction em src/domain/audit/types.ts). Mudou lá, muda aqui.
+FonteDados = Literal["simulacao", "material-disciplina", "estimativa", "documento", "outro"]
+
+AuditCategory = Literal["planejamento", "cenarios", "premissas", "estrutura", "sessao", "exportacao"]
+
+AuditEntity = Literal[
+    "receitas",
+    "despesas",
+    "investimentos",
+    "tributos",
+    "residual",
+    "mes",
+    "cenario",
+    "premissas",
+    "proveniencia",
+    "projeto",
+    "sessao",
+    "arquivo",
+    "historico",
+    "tma",
+]
+
+AuditAction = Literal[
+    "CREATE",
+    "EDIT",
+    "ADD",
+    "REMOVE",
+    "RESET",
+    "LOAD_EXAMPLE",
+    "SWITCH",
+    "EXPORT",
+    "LOGIN",
+    "LOGOUT",
+    "CLEAR",
+    "UNDO",
+    "REDO",
+    "IMPORT",
+    "DELETE",
+    "PASTE",
+]
+
+
+class CamelModel(BaseModel):
+    """Base para todo schema exposto na API: serializa/aceita camelCase no
+    JSON (compatível com os tipos TypeScript do front-end), mantendo
+    snake_case nos atributos Python."""
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, from_attributes=True)
+
+
+class UsuarioResponse(CamelModel):
+    id: str
+    nome: str
+    email: str
+    empresa: str | None = None
+
+
+class RegistrarRequest(CamelModel):
+    nome: str
+    email: str
+    senha: str
+    empresa: str | None = None
+
+
+class LoginRequest(CamelModel):
+    email: str
+    senha: str
+
+
+class RespostaAuth(CamelModel):
+    usuario: UsuarioResponse
+    token: str
+
+
+class PeriodoSchema(CamelModel):
+    mes: int
+    receitas: str
+    despesas: str
+    investimentos: str
+    tributos: str
+    residual: str
+
+
+class ProvenienciaSchema(CamelModel):
+    fonte: FonteDados
+    referencia: str
+    responsavel: str
+    atualizado_em: str
+
+
+class CenarioSchema(CamelModel):
+    id: str
+    nome: str
+    descricao_premissas: str
+    proveniencia: ProvenienciaSchema
+    cor: int
+    tma: str
+    periodos: list[PeriodoSchema]
+
+
+class EstadoPlannerSchema(CamelModel):
+    versao: Literal[2] = 2
+    id: str
+    nome_projeto: str
+    criado_em: str
+    atualizado_em: str
+    cenarios: list[CenarioSchema]
+    cenario_ativo_id: str
+
+
+class ResumoProjetoSchema(CamelModel):
+    id: str
+    nome: str
+    criado_em: str
+    atualizado_em: str
+    cenarios: int
+    meses: int
+
+
+class AtivoSchema(CamelModel):
+    projeto_id: str | None
+
+
+class ProjetoRefSchema(CamelModel):
+    id: str
+    nome: str
+
+
+class NovoEventoRequest(CamelModel):
+    project: ProjetoRefSchema | None = None
+    scenario: ProjetoRefSchema | None = None
+    category: AuditCategory
+    entity: AuditEntity
+    field: str | None = None
+    previous_value: str | None = None
+    new_value: str | None = None
+    action: AuditAction
+    summary: str
+
+
+class EventoResponse(CamelModel):
+    id: str
+    timestamp: str
+    user: dict
+    project: ProjetoRefSchema | None = None
+    scenario: ProjetoRefSchema | None = None
+    category: AuditCategory
+    entity: AuditEntity
+    field: str | None
+    previous_value: str | None
+    new_value: str | None
+    action: AuditAction
+    summary: str

@@ -19,6 +19,7 @@ export function RegisterPage() {
 
   function validar(): string | null {
     if (nome.trim().length < 2) return 'Informe seu nome.'
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return 'Informe um e-mail válido.'
     if (senha.length < 6) return 'A senha deve ter pelo menos 6 caracteres.'
     if (senha !== confirmarSenha) return 'As senhas não coincidem.'
     return null
@@ -46,11 +47,11 @@ export function RegisterPage() {
   return (
     <AuthLayout
       title="Criar conta"
-      subtitle="Leva menos de um minuto."
+      subtitle="Seu planejamento fica salvo com segurança no servidor."
       footer={
         <>
           Já tem conta?{' '}
-          <Link to="/entrar" className="font-medium text-brand-600 hover:text-brand-700">
+          <Link to="/login" className="focus-ring rounded font-medium text-accent hover:underline">
             Entrar
           </Link>
         </>
@@ -78,7 +79,7 @@ export function RegisterPage() {
         />
         <TextField
           label="Empresa / projeto (opcional)"
-          placeholder="Ex.: Grupo 3 — Engenharia Econômica"
+          placeholder="Ex.: Grupo 3, Engenharia Econômica"
           value={empresa}
           onChange={(e) => setEmpresa(e.target.value)}
         />
@@ -103,12 +104,12 @@ export function RegisterPage() {
           />
         </div>
 
-        <Button type="submit" size="lg" loading={carregando} className="mt-1 w-full">
+        <Button type="submit" variant="primary" size="lg" loading={carregando} className="mt-1 w-full">
           Criar conta
         </Button>
 
-        <p className="text-center text-xs leading-relaxed text-ink-400">
-          Conta local de demonstração — os dados ficam salvos apenas neste navegador.
+        <p className="text-center text-xs leading-relaxed text-fg-3">
+          Sua senha é criptografada e armazenada com segurança no servidor, nunca em texto simples.
         </p>
       </form>
     </AuthLayout>
