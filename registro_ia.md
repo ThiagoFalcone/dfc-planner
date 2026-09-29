@@ -223,15 +223,42 @@ incluindo a tabela mês a mês e a premissa registrada no cenário, em
 
 ---
 
+### 9. 2026-09-29: Cenário e relatório de decisão para a apresentação
+
+**Integrante responsável por esta interação:** João Vítor Mamede.
+
+**Objetivo:** preencher `relatorio_decisao.md` com um cenário realmente analisado
+(não o exemplo do EduTask, que ficava só como modelo/template), para a equipe
+apresentar e defender.
+
+**Ação do agente:** propôs um cenário de decisão distinto dos dois anteriores
+(EduTask e o da conferência independente #8): lançamento de um módulo pago dentro de
+um SaaS existente, com investimento inicial, despesas de operação constantes,
+receita de assinatura crescendo por adoção de clientes e tributos declarados. Criou
+o planejamento "Lançamento do módulo Relatórios Avançados (apresentação)" na
+aplicação de verdade (extensão Claude em Chrome), digitou os valores na UI e leu os
+quatro indicadores e os três limiares de sensibilidade (RF08) direto da tela —
+nenhum número do relatório foi inventado sem checar contra a aplicação rodando.
+
+**Verificação realizada:** indicadores obtidos na aplicação (capital necessário
+R$ 20.000; maior déficit R$ 20.000 no mês 1; recuperação no mês 5; saldo final
+R$ 14.550) e os três limiares de sensibilidade (queda de receita 30%; aumento de
+despesa 122%; atraso nas receitas 1 mês) foram lidos diretamente da página
+Sensibilidade e usados tal como exibidos, sem arredondar nem estimar.
+
+**Decisão humana:** *(equipe: revisar o cenário proposto, entender cada número antes
+de apresentar, e registrar aqui a decisão — aceito, ajustado ou rejeitado.)*
+
+---
+
 ## O que ainda depende de conferência manual da equipe (não feito pela IA)
 
-Para cumprir integralmente o Passo 3 e o Passo 8 da atividade, a equipe ainda precisa,
-antes da entrega:
+Para cumprir integralmente o Passo 8 da atividade, a equipe ainda precisa, antes da
+entrega:
 
-1. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
+1. Ler `relatorio_decisao.md` e este registro (interação #9) e se apropriar do
+   cenário proposto — a banca pergunta "qual premissa mais influencia o resultado?"
+   e "que decisão sua aplicação permite tomar?"; a equipe precisa responder isso sem
+   ler o documento, não só recitá-lo.
+2. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
    README**, sem ajuda, e registrar se conseguiu.
-2. Preencher o cabeçalho do relatório de decisão (`relatorio_decisao.md`) com o
-   cenário realmente analisado pela equipe para a apresentação.
-
-> A conferência independente de um segundo cenário (item que estava aqui) já foi
-> feita — ver interação #8 abaixo e `evidencias_teste.md`.

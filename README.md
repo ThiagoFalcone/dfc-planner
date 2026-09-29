@@ -223,12 +223,16 @@ backend/
 
 ## O que ainda falta fazer manualmente (equipe, antes da entrega)
 
-A conferência independente de um segundo cenário (calculado à mão e comparado com a
-aplicação pela interface real) já foi feita — ver `evidencias_teste.md`, seção
-"Segunda conferência independente". Falta à equipe: pedir para outro integrante
-executar o projeto seguindo só este README, e preencher `relatorio_decisao.md` com o
-cenário real apresentado (hoje ele só tem os dados de exemplo do EduTask, como
-modelo). Ver também a seção final de `registro_ia.md`.
+A conferência independente de um segundo cenário e o preenchimento do relatório de
+decisão (`relatorio_decisao.md`, com o cenário de lançamento do módulo "Relatórios
+Avançados") já foram feitos — ver `evidencias_teste.md` e `registro_ia.md`
+(interações #8 e #9). Falta à equipe:
+
+1. **Se apropriar do cenário do `relatorio_decisao.md`** antes de apresentar — a
+   banca pergunta "qual premissa mais influencia o resultado?" e "que decisão sua
+   aplicação permite tomar?"; é preciso saber responder sem reler o documento.
+2. Pedir para outro integrante executar o projeto seguindo só este README, e
+   registrar se conseguiu.
 
 ## Licença
 
