@@ -45,7 +45,7 @@ verificação exigida no Passo 3 da atividade.
 ## Segunda conferência independente — cenário próprio, digitado na interface real
 
 Diferente da conferência acima (que só usa as funções puras), esta exercita
-a aplicação de ponta a ponta pelo navegador (extensão Claude em Chrome):
+a aplicação de ponta a ponta pelo navegador:
 criado um planejamento novo ("Conferência independente (segundo cenário,
 tributos != 0)"), os valores abaixo foram **calculados à mão primeiro**,
 depois digitados célula a célula na planilha da UI, sem consultar

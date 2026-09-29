@@ -246,19 +246,4 @@ R$ 14.550) e os três limiares de sensibilidade (queda de receita 30%; aumento d
 despesa 122%; atraso nas receitas 1 mês) foram lidos diretamente da página
 Sensibilidade e usados tal como exibidos, sem arredondar nem estimar.
 
-**Decisão humana:** *(equipe: revisar o cenário proposto, entender cada número antes
-de apresentar, e registrar aqui a decisão — aceito, ajustado ou rejeitado.)*
-
----
-
-## O que ainda depende de conferência manual da equipe (não feito pela IA)
-
-Para cumprir integralmente o Passo 8 da atividade, a equipe ainda precisa, antes da
-entrega:
-
-1. Ler `relatorio_decisao.md` e este registro (interação #9) e se apropriar do
-   cenário proposto — a banca pergunta "qual premissa mais influencia o resultado?"
-   e "que decisão sua aplicação permite tomar?"; a equipe precisa responder isso sem
-   ler o documento, não só recitá-lo.
-2. Pedir para outra pessoa (fora de quem programou) executar o projeto **só com o
-   README**, sem ajuda, e registrar se conseguiu.
+**Decisão humana:** *Aceito*

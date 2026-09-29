@@ -428,10 +428,8 @@ export function CenariosPage() {
                   Premissas
                 </th>
                 {cenarios.map((c) => (
-                  <td key={c.editavel.id} className="px-3 py-3 text-right text-xs leading-relaxed text-fg-2">
-                    <span className="line-clamp-3" title={c.editavel.descricaoPremissas}>
-                      {c.editavel.descricaoPremissas || '—'}
-                    </span>
+                  <td key={c.editavel.id} className="px-3 py-3 text-left text-xs leading-relaxed text-fg-2">
+                    {c.editavel.descricaoPremissas || '—'}
                   </td>
                 ))}
                 <td />
